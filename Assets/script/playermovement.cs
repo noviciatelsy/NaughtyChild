@@ -43,7 +43,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
     private void Update()
     {
-        RotateTowardsMouse();
+        //RotateTowardsMouse();
     }
 
     private void FixedUpdate()
