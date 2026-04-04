@@ -109,6 +109,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""isRushing"",
+                    ""type"": ""Button"",
+                    ""id"": ""4cc39eb0-9337-4a78-a3e1-93ca06474547"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -177,6 +186,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e7d3eca-fbfc-4cfa-af03-fd6bd77083c4"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""isRushing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -187,6 +207,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_GameMode = asset.FindActionMap("GameMode", throwIfNotFound: true);
         m_GameMode_Move = m_GameMode.FindAction("Move", throwIfNotFound: true);
         m_GameMode_Interact = m_GameMode.FindAction("Interact", throwIfNotFound: true);
+        m_GameMode_isRushing = m_GameMode.FindAction("isRushing", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -269,6 +290,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IGameModeActions> m_GameModeActionsCallbackInterfaces = new List<IGameModeActions>();
     private readonly InputAction m_GameMode_Move;
     private readonly InputAction m_GameMode_Interact;
+    private readonly InputAction m_GameMode_isRushing;
     /// <summary>
     /// Provides access to input actions defined in input action map "GameMode".
     /// </summary>
@@ -288,6 +310,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GameMode/Interact".
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_GameMode_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "GameMode/isRushing".
+        /// </summary>
+        public InputAction @isRushing => m_Wrapper.m_GameMode_isRushing;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -320,6 +346,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @isRushing.started += instance.OnIsRushing;
+            @isRushing.performed += instance.OnIsRushing;
+            @isRushing.canceled += instance.OnIsRushing;
         }
 
         /// <summary>
@@ -337,6 +366,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @isRushing.started -= instance.OnIsRushing;
+            @isRushing.performed -= instance.OnIsRushing;
+            @isRushing.canceled -= instance.OnIsRushing;
         }
 
         /// <summary>
@@ -391,5 +423,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "isRushing" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnIsRushing(InputAction.CallbackContext context);
     }
 }
