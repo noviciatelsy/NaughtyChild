@@ -52,7 +52,7 @@ MonoBehaviour:
   moveSpeed: 5
   mouseSensitivity: 1
   sprintMultiplier: 2
-  jumpHeight: 2
+  jumpHeight: 0.75
 --- !u!54 &8444532352195353830
 Rigidbody:
   m_ObjectHideFlags: 0
