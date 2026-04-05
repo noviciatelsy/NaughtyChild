@@ -5,15 +5,22 @@ using UnityEngine;
 public class RuleSystem : MonoBehaviour
 {
     public static RuleSystem Instance { get; private set; }
-    public List<Rule> rules; // 数据库
 
+    // 所有规则SO（Inspector拖入）
+    [SerializeField] private List<Rule> allRules = new List<Rule>();
+
+    // 初始就生效的规则
+    [SerializeField] private List<Rule> initialRules = new List<Rule>();
+
+    // 按name索引，O(1)查找
+    private Dictionary<string, Rule> ruleMap;
     private HashSet<Rule> activeRules;
     private Rule pendingRule;
 
-    //UI层事件接口
-    public event Action<Rule> OnPendingRuleChanged;  //候选规则变更
-    public event Action<Rule> OnRuleActivated;       //规则正式生效
-    public event Action<Rule> OnRuleDeactivated;     //规则被移除
+    // UI层事件接口
+    public event Action<Rule> OnPendingRuleChanged;
+    public event Action<Rule> OnRuleActivated;
+    public event Action<Rule> OnRuleDeactivated;
 
     public Rule PendingRule => pendingRule;
 
@@ -32,59 +39,99 @@ public class RuleSystem : MonoBehaviour
     {
         activeRules = new HashSet<Rule>();
         pendingRule = null;
-        foreach (var rule in rules)
+
+        // 构建字典
+        ruleMap = new Dictionary<string, Rule>();
+        foreach (var rule in allRules)
         {
-            rule.onRuleApplied += OnRuleApplied;
-            rule.onRuleRemoved += OnRuleRemoved;
+            if (rule == null) continue;
+            ruleMap[rule.name] = rule;
+        }
+
+        // 初始规则直接生效
+        foreach (var rule in initialRules)
+        {
+            if (rule == null) continue;
+            ActivateRule(rule);
         }
     }
 
-    //规则被交互触发时，按优先级竞争候选位
-    private void OnRuleApplied(Rule rule)
+    /// <summary>
+    /// 按名字获取Rule SO
+    /// </summary>
+    public Rule GetRule(string ruleName)
     {
+        ruleMap.TryGetValue(ruleName, out var rule);
+        return rule;
+    }
+
+    /// <summary>
+    /// 按名字查规则是否生效
+    /// </summary>
+    public bool IsRuleActive(string ruleName)
+    {
+        var rule = GetRule(ruleName);
+        return rule != null && activeRules.Contains(rule);
+    }
+
+    public bool IsRuleActive(Rule rule)
+    {
+        return activeRules != null && activeRules.Contains(rule);
+    }
+
+    /// <summary>
+    /// 按名字设置候选
+    /// </summary>
+    public void SetPending(string ruleName)
+    {
+        SetPending(GetRule(ruleName));
+    }
+
+    public void SetPending(Rule rule)
+    {
+        if (rule == null) return;
         if (pendingRule == null || rule.priority > pendingRule.priority)
         {
             pendingRule = rule;
             OnPendingRuleChanged?.Invoke(pendingRule);
-            Debug.Log($"候选规则更新: {rule.GetType().Name} (优先级 {rule.priority})");
+            Debug.Log($"候选规则更新: {rule.name} (优先级 {rule.priority})");
         }
     }
 
-    //规则被主动移除
-    private void OnRuleRemoved(Rule rule)
-    {
-        if (activeRules.Remove(rule))
-        {
-            OnRuleDeactivated?.Invoke(rule);
-            Debug.Log($"规则移除: {rule.GetType().Name}");
-        }
-    }
-
-    //通关结算，将候选规则正式加入生效列表，返回被提交的规则
     public Rule CommitRound()
     {
         Rule committed = pendingRule;
         if (committed != null)
         {
-            activeRules.Add(committed);
-            OnRuleActivated?.Invoke(committed);
-            Debug.Log($"规则生效: {committed.GetType().Name} (优先级 {committed.priority})，当前共 {activeRules.Count} 条规则");
+            ActivateRule(committed);
         }
         pendingRule = null;
         OnPendingRuleChanged?.Invoke(null);
         return committed;
     }
 
-    //重置候选
+    private void ActivateRule(Rule rule)
+    {
+        if (activeRules.Add(rule))
+        {
+            OnRuleActivated?.Invoke(rule);
+            Debug.Log($"规则生效: {rule.name} (优先级 {rule.priority})，当前共 {activeRules.Count} 条");
+        }
+    }
+
+    public void DeactivateRule(Rule rule)
+    {
+        if (activeRules.Remove(rule))
+        {
+            OnRuleDeactivated?.Invoke(rule);
+            Debug.Log($"规则移除: {rule.name}");
+        }
+    }
+
     public void ResetPending()
     {
         pendingRule = null;
         OnPendingRuleChanged?.Invoke(null);
-    }
-
-    public bool IsRuleActive(Rule rule)
-    {
-        return activeRules.Contains(rule);
     }
 
     public bool HasPendingRule()
@@ -99,11 +146,7 @@ public class RuleSystem : MonoBehaviour
 
     public void ClearAllRules()
     {
-        var snapshot = new List<Rule>(activeRules);
-        foreach (var rule in snapshot)
-        {
-            rule.RemoveRule();
-        }
+        activeRules.Clear();
         pendingRule = null;
         OnPendingRuleChanged?.Invoke(null);
     }

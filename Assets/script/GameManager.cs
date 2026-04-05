@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         OnRuleCommitted?.Invoke(committed);
 
         Debug.Log(committed != null
-            ? $"第 {CurrentRound} 轮结束，新增规则: {committed.GetType().Name}"
+            ? $"第 {CurrentRound} 轮结束，新增规则: {committed.name}"
             : $"第 {CurrentRound} 轮结束，无新增规则");
     }
 
