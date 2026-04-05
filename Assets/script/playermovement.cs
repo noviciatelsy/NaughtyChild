@@ -73,7 +73,15 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     {
         if (context.performed)
         {
-            //交互逻辑，还没写
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit, 3f))
+            {
+                Interact interactable = hit.collider.GetComponent<Interact>();
+                if (interactable != null && interactable.Interactable)
+                {
+                    interactable.InteractObject();
+                }
+            }
         }
     }
 
