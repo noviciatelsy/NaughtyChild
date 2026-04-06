@@ -158,7 +158,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         // 画射线（黄色）
         Debug.DrawRay(ray.origin, ray.direction * 0.55f, Color.yellow);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 0.55f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 0.55f, ~0, QueryTriggerInteraction.Ignore))
         {
             // 命中画红色
             Debug.DrawLine(ray.origin, hit.point, Color.red);

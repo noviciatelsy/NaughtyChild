@@ -28,7 +28,6 @@ public class door : Interact
 
     private void OnRoundChanged(int newRound)
     {
-        Debug.Log("?");
         if (newRound > curRound)
         {
             curRound = newRound;

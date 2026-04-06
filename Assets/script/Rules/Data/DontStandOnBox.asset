@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1af515502e0c5954baab71bbfe38b8a5, type: 3}
   m_Name: DontStandOnBox
   m_EditorClassIdentifier: 
-  priority: 10
+  priority: 50
   description: 

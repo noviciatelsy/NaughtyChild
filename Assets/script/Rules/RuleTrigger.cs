@@ -14,7 +14,7 @@ public class RuleTrigger : MonoBehaviour
 
     public string RuleName => ruleName;
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         Debug.Log("trigger:"+ this.name);
         if (!other.CompareTag(playerTag)) return;
