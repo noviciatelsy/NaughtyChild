@@ -6589,7 +6589,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.760507, g: 1, b: 0.5503144, a: 1}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -8276,6 +8276,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7689874983758448864, guid: a3abba04978e10d43b23a9b48893fb5c,
+        type: 3}
+      propertyPath: allRules.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7689874983758448864, guid: a3abba04978e10d43b23a9b48893fb5c,
+        type: 3}
+      propertyPath: allRules.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a63fe45df521f348a8b8af9e156ecc1,
+        type: 2}
     - target: {fileID: 7689874983758448864, guid: a3abba04978e10d43b23a9b48893fb5c,
         type: 3}
       propertyPath: initialRules.Array.size

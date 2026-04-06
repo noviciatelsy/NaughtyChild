@@ -27,6 +27,7 @@ public class Interact : MonoBehaviour
     {
         if (!Interactable) return;
 
+        Debug.Log("与" + this.name + "交互");
         if (RuleSystem.Instance.IsRuleActive(ruleName))
         {
             var rule = RuleSystem.Instance.GetRule(ruleName);

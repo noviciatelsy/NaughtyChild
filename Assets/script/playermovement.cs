@@ -118,8 +118,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         if (context.performed)
         {
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit, 3f))
+            Debug.DrawRay(ray.origin, ray.direction * 30f, Color.green, 2f);
+            if (Physics.Raycast(ray, out RaycastHit hit, 30f))
             {
+                Debug.DrawLine(ray.origin, hit.point, Color.red, 2f);
+                Debug.Log("interact:" + hit);
                 Interact interactable = hit.collider.GetComponent<Interact>();
                 if (interactable != null && interactable.Interactable)
                 {
