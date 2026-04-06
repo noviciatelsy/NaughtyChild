@@ -9,7 +9,7 @@ using UnityEngine;
 public class RuleTrigger : MonoBehaviour
 {
     [Header("规则配置")]
-    [SerializeField] private string ruleName;
+    [SerializeField] public string ruleName;
     [SerializeField] private string playerTag = "Player";
 
     public string RuleName => ruleName;

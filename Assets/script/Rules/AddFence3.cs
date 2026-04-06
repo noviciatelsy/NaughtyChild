@@ -22,7 +22,7 @@ public class AddFence3 : RuleTrigger
         if (newRound > curRound)
         {
             curRound = newRound;
-            if (RuleSystem.Instance.IsRuleActive("Farjump"))
+            if (RuleSystem.Instance.IsRuleActive(ruleName))
             {
                 fence.gameObject.SetActive(true);
             }
@@ -32,7 +32,7 @@ public class AddFence3 : RuleTrigger
     protected override void OnTriggerEnter(Collider other)
     {
         //只允许第1次触发:蓝字补丁
-        if (RuleSystem.Instance.IsRuleActive("Farjump"))
+        if (RuleSystem.Instance.IsRuleActive(ruleName))
         {
             return;
         }
