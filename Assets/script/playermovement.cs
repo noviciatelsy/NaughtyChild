@@ -47,6 +47,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
     private void FixedUpdate()
     {
+        CheckGround();
+
         Move();
 
         // 保持角色直立
@@ -70,6 +72,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
+        if (!isGrounded && IsHittingWall(inputDir))
+        {
+            inputDir = Vector3.zero; //不再往墙推
+        }
 
         Vector3 v = rb.velocity;
 
@@ -84,6 +90,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     // =========================
     private void HandleJump()
     {
+        if (!isGrounded) return;
+
         //transform.position += Vector3.up * 10;
         Vector3 v = rb.velocity;
         v.y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
@@ -132,5 +140,34 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         }
     }
 
+    private void CheckGround()
+    {
+        isGrounded = Physics.Raycast(
+            transform.position,
+            Vector3.down,
+            0.65f
+        );
+    }
 
+    private bool IsHittingWall(Vector3 dir)
+    {
+        if (dir == Vector3.zero) return false;
+
+        Ray ray = new Ray(transform.position, dir);
+
+        // 画射线（黄色）
+        Debug.DrawRay(ray.origin, ray.direction * 0.55f, Color.yellow);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 0.55f))
+        {
+            // 命中画红色
+            Debug.DrawLine(ray.origin, hit.point, Color.red);
+
+            Debug.Log("撞墙: " + hit.collider.name);
+
+            return true;
+        }
+
+        return false;
+    }
 }

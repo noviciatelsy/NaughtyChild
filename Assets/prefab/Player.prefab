@@ -48,10 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61cf8fc465cd19345902db5055c89d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 6
   mouseSensitivity: 1
   sprintMultiplier: 2
-  jumpHeight: 1.2
+  jumpHeight: 1
 --- !u!54 &8444532352195353830
 Rigidbody:
   m_ObjectHideFlags: 0
