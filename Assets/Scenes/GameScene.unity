@@ -1060,7 +1060,6 @@ Transform:
   m_Children:
   - {fileID: 497161575}
   - {fileID: 1783655991}
-  - {fileID: 4899004644281814756}
   - {fileID: 1217860299}
   - {fileID: 1470329157}
   - {fileID: 577431536}
@@ -4316,6 +4315,7 @@ Transform:
   - {fileID: 1514672232}
   - {fileID: 1238443751}
   - {fileID: 1381840155}
+  - {fileID: 4899004644281814756}
   - {fileID: 377692196}
   - {fileID: 774757775}
   - {fileID: 795372855}
@@ -4543,6 +4543,7 @@ MonoBehaviour:
   allRules:
   - {fileID: 11400000, guid: fa9888e6a40ca5343ba6d52858b262dc, type: 2}
   - {fileID: 11400000, guid: 1a63fe45df521f348a8b8af9e156ecc1, type: 2}
+  - {fileID: 11400000, guid: 2338252831cd5e7499a5dbd53235003c, type: 2}
   initialRules: []
 --- !u!4 &1284021712
 Transform:
@@ -8240,17 +8241,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 377692196}
+    m_TransformParent: {fileID: 1196311030}
     m_Modifications:
     - target: {fileID: 7255793214910148812, guid: 229bc7a18f71e214f923efa78abb2249,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7255793214910148812, guid: 229bc7a18f71e214f923efa78abb2249,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7255793214910148812, guid: 229bc7a18f71e214f923efa78abb2249,
         type: 3}
