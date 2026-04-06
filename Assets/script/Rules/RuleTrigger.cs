@@ -16,6 +16,7 @@ public class RuleTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("trigger:"+ this.name);
         if (!other.CompareTag(playerTag)) return;
         if (GameManager.Instance.CurrentState != GameState.Playing) return;
 
