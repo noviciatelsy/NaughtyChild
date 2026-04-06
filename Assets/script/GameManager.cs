@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public event Action<Rule> OnRuleCommitted;         //本轮生效的规则
     public event Action OnGameRestarted;
 
+    public int RoundToEnd = 10; //通关多少次可以游戏结束
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
 
@@ -48,6 +49,8 @@ public class GameManager : MonoBehaviour
         SetState(GameState.Playing);
         OnRoundStarted?.Invoke(CurrentRound);
         Debug.Log($"第 {CurrentRound} 轮开始");
+
+        SetplayerPos();
     }
 
     //玩家通关，结算本轮
@@ -64,6 +67,18 @@ public class GameManager : MonoBehaviour
         Debug.Log(committed != null
             ? $"第 {CurrentRound} 轮结束，新增规则: {committed.name}"
             : $"第 {CurrentRound} 轮结束，无新增规则");
+
+
+        //判断是否结束游戏
+        if(CurrentRound < RoundToEnd) 
+        {
+            //todo:新的一轮动画,etc...
+            StartRound();
+        }
+        else
+        {
+            //todo:结束游戏
+        }
     }
 
     //重开当前轮不结算规则
@@ -104,5 +119,24 @@ public class GameManager : MonoBehaviour
         if (CurrentState == newState) return;
         CurrentState = newState;
         OnGameStateChanged?.Invoke(newState);
+    }
+
+    private void SetplayerPos()
+    {
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            Rigidbody rb = player.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero; // 清速度
+                rb.angularVelocity = Vector3.zero;
+                rb.position = new Vector3(0f, 1f, -2f);
+            }
+            else
+            {
+                player.transform.position = new Vector3(0f, 1f, -2f);
+            }
+        }
     }
 }
