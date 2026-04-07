@@ -9,8 +9,8 @@ public class Throwable : MonoBehaviour
 {
     private Rigidbody rb;
     private LineRenderer lr;
+    [SerializeField] private float mass = 1f;
 
-    [SerializeField] private float throwForce = 10f;
     private Vector3 cachedVelocity;
     private Collider[] playerColliders;
     [Header("轨迹参数")]
@@ -20,7 +20,6 @@ public class Throwable : MonoBehaviour
     private Transform handPoint;
     private bool isHeld = false;
 
-    public float ThrowForce => throwForce;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -105,14 +104,18 @@ public class Throwable : MonoBehaviour
 
     private void DrawTrajectory()
     {
-        if (!GetMouseHitPoint(out Vector3 targetPos))
+        if (!GetMouseHitPoint(out Vector3 targetPos1))
             return;
 
         lr.enabled = true;
         lr.positionCount = resolution;
 
         Vector3 startPos = handPoint.position;
-
+        Vector3 targetPos = Vector3.Lerp(
+            startPos,
+            targetPos1,
+            1f / mass
+        );
         float totalTime = resolution * timeStep;
         totalTime = GetThrowTime(startPos, targetPos);
         // 关键：反推初速度（保证落点=鼠标点）

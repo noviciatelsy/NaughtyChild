@@ -36,6 +36,7 @@ Transform:
   - {fileID: 1881431587542031479}
   - {fileID: 4927894169289269132}
   - {fileID: 5773131888986765952}
+  - {fileID: 3470904082034455970}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &99233030391361562
@@ -206,7 +207,7 @@ Transform:
   m_GameObject: {fileID: 3111768330998009209}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2855754, z: -8.467911}
+  m_LocalPosition: {x: 0, y: 1.2855752, z: -6.4679117}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -276,15 +277,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3444049905356698145}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
   m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3387437572432654894}
-  - {fileID: 3470904082034455970}
   m_Father: {fileID: 6761858355269966502}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!1 &3800339264861308837
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,12 +310,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3800339264861308837}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.64000005, z: 0.8}
+  m_LocalScale: {x: 0.96000004, y: 0.7680001, z: 0.9600001}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 4927894169289269132}
+  m_Father: {fileID: 6761858355269966502}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &2583808620759980465
 SpriteRenderer:
@@ -437,7 +437,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 10
+  m_CameraDistance: 8
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
