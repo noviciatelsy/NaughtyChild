@@ -18,6 +18,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private bool isjump = false;
     [SerializeField] private float jumpHeight = 2f;
 
+    [Header("视角拖动")]
+    [SerializeField] private Transform cameraRoot; // 你要旋转的物体
+    [SerializeField] private Transform playertextureroot; // 你要旋转的物体
+    [SerializeField] private float dragSensitivity = 0.2f;
+    private bool isDragging = false;
+
     private bool isGrounded;
 
     private PlayerInput inputActions;
@@ -46,6 +52,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private void OnDisable() => inputActions.GameMode.Disable();
     private void OnDestroy() => inputActions.Dispose();
 
+    private void Update()
+    {
+        HandleMouseDrag();
+    }
+
     private void FixedUpdate()
     {
         CheckGround();
@@ -66,10 +77,22 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         if (isRushing && isGrounded)
             currentSpeed *= sprintMultiplier;
+        // ✅ 只取摄像机Y轴角度
+        float y = cameraRoot.eulerAngles.y;
+
+        // ✅ 用角度构造一个“水平旋转”
+        Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
+
+        // ✅ 得到方向（完全水平）
+        Vector3 forward = yawRotation * Vector3.forward;
+        Vector3 right = yawRotation * Vector3.right;
 
         Vector3 inputDir =
-            transform.forward * moveInput.y +
-            transform.right * moveInput.x;
+            forward * moveInput.y +
+            right * moveInput.x;
+        //Vector3 inputDir =
+        //    transform.forward * moveInput.y +
+        //    transform.right * moveInput.x;
 
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
@@ -216,5 +239,26 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         }
 
         return false;
+    }
+
+    private void HandleMouseDrag()
+    {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+            isDragging = true;
+
+        if (Mouse.current.leftButton.wasReleasedThisFrame)
+            isDragging = false;
+
+        if (!isDragging) return;
+
+        float mouseX = Mouse.current.delta.ReadValue().x;
+
+        float angle = mouseX * dragSensitivity;
+
+        // 方式1：直接改欧拉角（你想要的方式）
+        Vector3 euler = cameraRoot.eulerAngles;
+        euler.y -= angle;
+        cameraRoot.eulerAngles = euler;
+        playertextureroot.eulerAngles = euler;
     }
 }

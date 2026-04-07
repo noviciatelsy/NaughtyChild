@@ -55,6 +55,9 @@ MonoBehaviour:
   mouseSensitivity: 1
   sprintMultiplier: 2
   jumpHeight: 0.8
+  cameraRoot: {fileID: 1881431587542031479}
+  playertextureroot: {fileID: 4927894169289269132}
+  dragSensitivity: 0.2
 --- !u!54 &8444532352195353830
 Rigidbody:
   m_ObjectHideFlags: 0
