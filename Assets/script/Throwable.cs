@@ -93,14 +93,20 @@ public class Throwable : MonoBehaviour
         rb.velocity = cachedVelocity;
     }
 
-    public virtual void OnUse(Interact target)
+    public virtual void OnUse(GameObject target)
     {
+        if (target == null) return;
+
         Debug.Log("用物体 interacting: " + target.name);
 
-        // 默认行为：触发目标的交互
-        target.InteractObject();
-    }
+        // ⭐关键：从目标拿 Interact
+        Interact interact = target.GetComponent<Interact>();
 
+        if (interact != null)
+        {
+            interact.InteractObject(this.gameObject); // 把自己传进去
+        }
+    }
 
     private void DrawTrajectory()
     {

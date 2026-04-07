@@ -23,18 +23,22 @@ public class Interact : MonoBehaviour
 
     public event Action<Interact> OnInteractedEvent;
 
-    public virtual void InteractObject()
+    public virtual void InteractObject(GameObject item)
     {
         if (!Interactable) return;  
 
         Debug.Log("与" + this.name + "交互");
-        var throwable = GetComponent<Throwable>();
-        if (throwable != null && !PlayerHand.Instance.HasItem)
+        if (item == null)
         {
-            PlayerHand.Instance.PickItem(throwable);
-            Debug.Log("捡起:" + this.name);
+            var throwable = GetComponent<Throwable>();
+            if (throwable != null && !PlayerHand.Instance.HasItem)
+            {
+                PlayerHand.Instance.PickItem(throwable);
+                Debug.Log("捡起:" + this.name);
+            }
         }
 
+        // 规则系统（保持原样）
         if (RuleSystem.Instance.IsRuleActive(ruleName))
         {
             var rule = RuleSystem.Instance.GetRule(ruleName);
@@ -46,11 +50,11 @@ public class Interact : MonoBehaviour
             RuleSystem.Instance.SetPending(ruleName);
         }
 
-        OnInteracted();
+        OnInteracted(item); // 传下去
         OnInteractedEvent?.Invoke(this);
     }
 
-    protected virtual void OnInteracted() { }
+    protected virtual void OnInteracted(GameObject item) { }
 
     public void SetInteractable(bool value)
     {

@@ -7,9 +7,9 @@ public class door : Interact
     private bool isOpening = false;
     private int curRound = 0;
    
-    public override void InteractObject()
+    public override void InteractObject(GameObject item)
     {
-        base.InteractObject();
+        base.InteractObject(item);
         Openthedoor();
     }
 

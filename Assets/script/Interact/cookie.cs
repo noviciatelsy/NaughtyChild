@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Cookie : Interact
 {
-    public override void InteractObject()
+    public override void InteractObject(GameObject item)
     {
-        base.InteractObject();
+        base.InteractObject(item);
         GameManager.Instance.CompleteRound();
     }
 

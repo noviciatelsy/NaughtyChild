@@ -158,7 +158,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
             if (hasValidTarget)
             {
                 // 有物体 + 点到交互物 → 只交互，不扔
-                interact.InteractObject();
+                PlayerHand.Instance.UseItem(interact.gameObject);
             }
             else
             {
@@ -181,7 +181,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
             if (hasValidTarget)
             {
                 // 空手 + 点到 → 正常交互
-                interact.InteractObject();
+                interact.InteractObject(null);
             }
             // 空手 + 没点到 → 什么都不做
         }

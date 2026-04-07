@@ -6,7 +6,7 @@ public class PlayerHand : MonoBehaviour
 
     [SerializeField] private Transform handPoint;
 
-    private Throwable currentItem;
+    public Throwable currentItem;
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class PlayerHand : MonoBehaviour
         item.OnPicked(handPoint);
     }
 
-    public void UseItem(Interact target)
+    public void UseItem(GameObject target)
     {
         if (currentItem == null) return;
 
