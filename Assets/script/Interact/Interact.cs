@@ -23,6 +23,31 @@ public class Interact : MonoBehaviour
 
     public event Action<Interact> OnInteractedEvent;
 
+    public Collider col;
+    public Renderer rend;
+    public Rigidbody rb;
+    private Vector3 startPos;
+    private Quaternion startRot;
+    private int curRound;
+    private void Start()
+    {
+        col = GetComponentInChildren<Collider>();
+        rend = GetComponentInChildren<Renderer>();
+        rb = GetComponentInChildren<Rigidbody>();
+
+        startPos = transform.position;
+        startRot = transform.rotation;
+
+        curRound = GameManager.Instance.CurrentRound;
+        GameManager.Instance.OnRoundStarted += OnRoundChanged;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnRoundStarted -= OnRoundChanged;
+    }
+
     public virtual void InteractObject(GameObject item)
     {
         if (!Interactable) return;  
@@ -59,6 +84,31 @@ public class Interact : MonoBehaviour
     public void SetInteractable(bool value)
     {
         interactable = value;
+    }
+
+    public virtual void Reset()
+    {
+        transform.position = startPos;
+        transform.rotation = startRot;
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        col.enabled = true;
+        rend.enabled = true;
+
+        Debug.Log("物品" + this.name + "重置");
+    }
+
+    public virtual void OnRoundChanged(int newRound)
+    {
+        if (newRound > curRound)
+        {
+            curRound = newRound;
+            Reset();
+        }
     }
 }
 

@@ -1,27 +1,72 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Box : Interact
 {
+    private bool isBroken = false;
+    [Header("æ‰è½ç‰©")]
+    [SerializeField] private GameObject woodPrefab;
+    [SerializeField] private int woodCount = 3;
+    private List<GameObject> spawnedWoods = new List<GameObject>();
+
     protected override void OnInteracted(GameObject item)
     {
-        //ÅĞ¶ÏÊÇ·ñÊÇ axe
+        if (isBroken) return;
+        //åˆ¤æ–­æ˜¯å¦æ˜¯ axe
         if (item != null && item.GetComponent<axe>() != null)
         {
-            Debug.Log("ÓÃ¸«Í·¿³Ïä×Ó");
+            Debug.Log("ç”¨æ–§å¤´ç ç®±å­");
 
             BreakBox();
-            return;
         }
 
-        // Ä¬ÈÏÂß¼­
-        Debug.Log("ÆÕÍ¨½»»¥Ïä×Ó");
+        // é»˜è®¤é€»è¾‘
+        Debug.Log("æ™®é€šäº¤äº’ç®±å­");
     }
 
     private void BreakBox()
     {
-        Debug.Log("Ïä×Ó±»ÆÆ»µ£¡");
-        Destroy(gameObject);
+        isBroken = true;
+
+        // ä¸Destroyï¼Œè€Œæ˜¯éšè—
+        col.enabled = false;
+        rend.enabled = false;
+
+        SpawnWoods();
+
+        Debug.Log("ç®±å­è¢«ç ´åï¼ˆæ‰è½æœ¨æ¿ï¼‰");
+    }
+
+    private void SpawnWoods()
+    {
+        for (int i = 0; i < woodCount; i++)
+        {
+            Vector3 offset = Random.insideUnitSphere * 0.5f;
+            offset.y = Mathf.Abs(offset.y); // å¾€ä¸Šæ•£å¼€ä¸€ç‚¹
+
+            GameObject wood = Instantiate(
+                woodPrefab,
+                transform.position + offset,
+                Quaternion.identity
+            );
+
+            spawnedWoods.Add(wood); // è®°å½•ï¼
+        }
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        isBroken = false;
+
+        // åˆ é™¤æ‰€æœ‰ç”Ÿæˆçš„æœ¨æ¿
+        foreach (var wood in spawnedWoods)
+        {
+            if (wood != null)
+                Destroy(wood);
+        }
+
+        spawnedWoods.Clear();
     }
 }

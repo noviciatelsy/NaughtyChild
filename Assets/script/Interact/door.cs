@@ -5,34 +5,11 @@ using UnityEngine;
 public class door : Interact
 {
     private bool isOpening = false;
-    private int curRound = 0;
    
     public override void InteractObject(GameObject item)
     {
         base.InteractObject(item);
         Openthedoor();
-    }
-
-    private void Start()
-    {
-        curRound = GameManager.Instance.CurrentRound;
-
-        GameManager.Instance.OnRoundStarted += OnRoundChanged;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnRoundStarted -= OnRoundChanged;
-    }
-
-    private void OnRoundChanged(int newRound)
-    {
-        if (newRound > curRound)
-        {
-            curRound = newRound;
-            Doorreset();
-        }
     }
 
 
@@ -44,8 +21,10 @@ public class door : Interact
         }
     }
 
-    public void Doorreset()
+    public override void Reset()
     {
+        base.Reset();
+        isOpening = false;
         Quaternion targetRot = Quaternion.Euler(0f, 0f, 0f);
         transform.rotation = targetRot;
     }

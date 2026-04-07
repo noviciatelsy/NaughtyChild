@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7318417651107059382
+--- !u!1 &3266765633029884450
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5995830129241802303}
-  - component: {fileID: 6885511062633994357}
-  - component: {fileID: 7035278427463896385}
-  - component: {fileID: 2461977595247384148}
-  - component: {fileID: 249014179050529166}
-  - component: {fileID: 6008808462696246621}
-  - component: {fileID: -7237070113115524524}
-  - component: {fileID: 3101230440370188131}
+  - component: {fileID: 4986277656343604153}
+  - component: {fileID: 3104107280936545338}
+  - component: {fileID: 7135004777560932592}
+  - component: {fileID: 6785242894744644981}
+  - component: {fileID: 4734831810175509303}
+  - component: {fileID: 8803572312730553493}
+  - component: {fileID: 7719013855184045819}
+  - component: {fileID: 6354970343470378028}
   m_Layer: 0
-  m_Name: Box
+  m_Name: board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5995830129241802303
+--- !u!4 &4986277656343604153
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0.5, z: 0.2}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: -1.84, y: 0.95, z: -2.15}
+  m_LocalScale: {x: 1, y: 0.25, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6885511062633994357
+--- !u!33 &3104107280936545338
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7035278427463896385
+--- !u!23 &7135004777560932592
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -88,13 +88,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2461977595247384148
+--- !u!65 &6785242894744644981
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -109,34 +109,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &249014179050529166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c64e5cea880d64b4fbd84d88c449f631, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ruleName: DontStandOnBox
-  interactable: 1
-  interactHint: "\u6309E\u4EA4\u4E92"
-  col: {fileID: 0}
-  rend: {fileID: 0}
-  rb: {fileID: 0}
-  woodPrefab: {fileID: 3266765633029884450, guid: 91c7a1c96c8f8d941b6c3a786daf96a0,
-    type: 3}
-  woodCount: 3
---- !u!54 &6008808462696246621
+--- !u!54 &4734831810175509303
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -157,29 +136,14 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-7237070113115524524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4a08c75014183b4b81389ef6f383c46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mass: 2
-  resolution: 1500
-  timeStep: 0.1
---- !u!120 &3101230440370188131
+--- !u!120 &8803572312730553493
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7318417651107059382}
+  m_GameObject: {fileID: 3266765633029884450}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -285,3 +249,36 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &7719013855184045819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266765633029884450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a08c75014183b4b81389ef6f383c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 1
+  resolution: 150
+  timeStep: 0.02
+--- !u!114 &6354970343470378028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266765633029884450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7887b2bdffb72c4099839343f088498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ruleName: 
+  interactable: 1
+  interactHint: "\u6309E\u4EA4\u4E92"
+  col: {fileID: 0}
+  rend: {fileID: 0}
+  rb: {fileID: 0}
