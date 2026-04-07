@@ -105,6 +105,9 @@ MonoBehaviour:
   rend: {fileID: 0}
   rb: {fileID: 0}
   transpoint: {fileID: 6773978222585867424}
+  rockPrefab: {fileID: 3266765633029884450, guid: 927c156782a53314d9d225002874f0a8,
+    type: 3}
+  rockCount: 3
 --- !u!65 &6484963823412783801
 BoxCollider:
   m_ObjectHideFlags: 0
