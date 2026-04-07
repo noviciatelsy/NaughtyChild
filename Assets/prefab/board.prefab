@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 8803572312730553493}
   - component: {fileID: 7719013855184045819}
   - component: {fileID: 6354970343470378028}
+  - component: {fileID: 2112437835290551901}
+  - component: {fileID: 4854560574322312995}
   m_Layer: 0
   m_Name: board
   m_TagString: Untagged
@@ -282,3 +284,38 @@ MonoBehaviour:
   col: {fileID: 0}
   rend: {fileID: 0}
   rb: {fileID: 0}
+--- !u!114 &2112437835290551901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266765633029884450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19fb91230447e648ad007b8cd205d10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ruleName: Donttouchboard
+  playerTag: Player
+--- !u!65 &4854560574322312995
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266765633029884450}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1, y: 1.1, z: 1.1}
+  m_Center: {x: 0, y: 0, z: 0}
