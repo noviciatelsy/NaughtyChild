@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4899004645609101525}
   - component: {fileID: 2402097747027103816}
+  - component: {fileID: 2812877752178177411}
   m_Layer: 0
   m_Name: Fence
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 534023013065061576}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.97, z: 0.52}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -54,6 +55,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.2, z: 0.2}
   m_Center: {x: 0, y: 0.1, z: 0}
+--- !u!114 &2812877752178177411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534023013065061576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a01fa3846ec6804b92f8fbc4049de69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ruleName: 
+  interactable: 1
+  interactHint: "\u6309E\u4EA4\u4E92"
+  col: {fileID: 0}
+  rend: {fileID: 0}
+  rb: {fileID: 0}
+  woodPrefab: {fileID: 3266765633029884450, guid: 91c7a1c96c8f8d941b6c3a786daf96a0,
+    type: 3}
+  woodCount: 2
 --- !u!1 &8153939974841559860
 GameObject:
   m_ObjectHideFlags: 0
