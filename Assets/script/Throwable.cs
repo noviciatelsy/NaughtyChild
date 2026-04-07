@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -91,6 +92,8 @@ public class Throwable : MonoBehaviour
         }
 
         rb.velocity = cachedVelocity;
+
+        StartCoroutine(RestoreCollision(selfCol, 0.3f));
     }
 
     public virtual void OnUse(GameObject target)
@@ -212,5 +215,21 @@ public class Throwable : MonoBehaviour
         );
 
         lr.colorGradient = gradient;
+    }
+
+    private IEnumerator RestoreCollision(Collider selfCol, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (playerColliders != null)
+        {
+            foreach (var col in playerColliders)
+            {
+                if (col != null && selfCol != null)
+                {
+                    Physics.IgnoreCollision(selfCol, col, false);
+                }
+            }
+        }
     }
 }
