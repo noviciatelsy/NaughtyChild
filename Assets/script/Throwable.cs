@@ -11,6 +11,8 @@ public class Throwable : MonoBehaviour
     private LineRenderer lr;
 
     [SerializeField] private float throwForce = 10f;
+    private Vector3 cachedVelocity;
+    private Collider[] playerColliders;
     [Header("轨迹参数")]
     [SerializeField] private int resolution = 150;
     [SerializeField] private float timeStep = 0.02f;
@@ -25,6 +27,16 @@ public class Throwable : MonoBehaviour
         lr = GetComponent<LineRenderer>(); //缺这个
         lr.enabled = false;
         SetupLineColor();
+    }
+
+    private void Start()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            playerColliders = player.GetComponentsInChildren<Collider>();
+        }
     }
 
     private void Update()
@@ -46,6 +58,17 @@ public class Throwable : MonoBehaviour
 
         rb.isKinematic = true;
         rb.useGravity = false;
+
+        Collider selfCol = GetComponent<Collider>();
+
+        if (playerColliders != null)
+        {
+            foreach (var col in playerColliders)
+            {
+                Physics.IgnoreCollision(selfCol, col, true);
+            }
+        }
+
         GetComponent<Collider>().enabled = false;
     }
 
@@ -59,8 +82,16 @@ public class Throwable : MonoBehaviour
         rb.useGravity = true;
         GetComponent<Collider>().enabled = true;
 
-        rb.velocity = Vector3.zero;
-        rb.AddForce(dir * throwForce, ForceMode.Impulse);
+        Collider selfCol = GetComponent<Collider>();
+        if (playerColliders != null)
+        {
+            foreach (var col in playerColliders)
+            {
+                Physics.IgnoreCollision(selfCol, col, true);
+            }
+        }
+
+        rb.velocity = cachedVelocity;
     }
 
     public virtual void OnUse(Interact target)
@@ -85,7 +116,8 @@ public class Throwable : MonoBehaviour
         float totalTime = resolution * timeStep;
         totalTime = GetThrowTime(startPos, targetPos);
         // 关键：反推初速度（保证落点=鼠标点）
-        Vector3 v0 = CalculateInitialVelocity(startPos, targetPos, totalTime);
+        cachedVelocity = CalculateInitialVelocity(startPos, targetPos, totalTime);
+        Vector3 v0 = cachedVelocity;
 
         Vector3 prevPos = startPos;
 
