@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  mouseSensitivity: 1
+  mouseSensitivity: 0.5
   sprintMultiplier: 2
   jumpHeight: 0.8
   cameraRoot: {fileID: 1881431587542031479}
