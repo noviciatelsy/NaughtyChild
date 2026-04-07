@@ -16,8 +16,9 @@ public class fence : Interact
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
-            Debug.Log("用斧头砍围栏");
             TriggerRuleSystem("DontDestroyfence");
+            if (RuleSystem.Instance.IsRuleActive("DontDestroyfence")) return;
+            Debug.Log("用斧头砍围栏");
             Breakfence();
         }
 

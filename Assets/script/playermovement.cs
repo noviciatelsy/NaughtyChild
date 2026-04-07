@@ -87,7 +87,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     }
 
     // =========================
-    // ⭐跳跃（最简稳定版）
+    // 跳跃（最简稳定版）
     // =========================
     private void HandleJump()
     {
