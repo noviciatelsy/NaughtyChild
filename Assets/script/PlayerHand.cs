@@ -23,7 +23,7 @@ public class PlayerHand : MonoBehaviour
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
 
-        item.OnPicked();
+        item.OnPicked(handPoint);
     }
 
     public void UseItem(Interact target)

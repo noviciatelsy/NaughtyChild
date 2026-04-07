@@ -143,7 +143,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
             // 核心判定：必须同时满足可交互+在判定范围内
             if (interact != null &&
                 interact.Interactable &&
-                distance <= 5f)
+                distance <= 2f)
             {
                 hasValidTarget = true;
             }
@@ -162,8 +162,18 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
             }
             else
             {
-                // 有物体 + 没点到 → 扔
-                PlayerHand.Instance.ThrowItem(mainCamera.transform.forward);
+                Vector3 throwDir = mainCamera.transform.forward;
+
+                // 从鼠标发射射线
+                Ray ray1 = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+                if (Physics.Raycast(ray1, out RaycastHit hit1, 100f))
+                {
+                    //  朝鼠标命中点方向
+                    throwDir = (hit1.point - PlayerHand.Instance.transform.position).normalized;
+                }
+
+                PlayerHand.Instance.ThrowItem(throwDir);
             }
         }
         else
