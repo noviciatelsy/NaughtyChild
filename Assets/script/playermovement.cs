@@ -127,12 +127,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         if (!context.performed) return;
 
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Debug.DrawRay(ray.origin, ray.direction * 30f, Color.green, 2f);
+        Debug.DrawRay(ray.origin, ray.direction * 300f, Color.green, 2f);
 
         bool hasValidTarget = false;
         Interact interact = null;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 30f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 300f))
         {
             Debug.DrawLine(ray.origin, hit.point, Color.red, 2f);
 
@@ -167,7 +167,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
                 // 从鼠标发射射线
                 Ray ray1 = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-                if (Physics.Raycast(ray1, out RaycastHit hit1, 100f))
+                if (Physics.Raycast(ray1, out RaycastHit hit1, 300f))
                 {
                     //  朝鼠标命中点方向
                     throwDir = (hit1.point - PlayerHand.Instance.transform.position).normalized;

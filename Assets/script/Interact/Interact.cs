@@ -104,11 +104,11 @@ public class Interact : MonoBehaviour
 
     public virtual void OnRoundChanged(int newRound)
     {
-        if (newRound > curRound)
-        {
+        //if (newRound != curRound)
+        //{
             curRound = newRound;
             Reset();
-        }
+        //}
     }
 }
 
