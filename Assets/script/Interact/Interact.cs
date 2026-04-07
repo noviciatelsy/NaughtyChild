@@ -63,17 +63,17 @@ public class Interact : MonoBehaviour
             }
         }
 
-        // 规则系统（保持原样）
-        if (RuleSystem.Instance.IsRuleActive(ruleName))
-        {
-            var rule = RuleSystem.Instance.GetRule(ruleName);
-            rule.OnRuleViolated(gameObject);
-            return;
-        }
-        else
-        {
-            RuleSystem.Instance.SetPending(ruleName);
-        }
+        //// 规则系统：让子类确定规则触发条件
+        //if (RuleSystem.Instance.IsRuleActive(ruleName))
+        //{
+        //    var rule = RuleSystem.Instance.GetRule(ruleName);
+        //    rule.OnRuleViolated(gameObject);
+        //    return;
+        //}
+        //else
+        //{
+        //    RuleSystem.Instance.SetPending(ruleName);
+        //}
 
         OnInteracted(item); // 传下去
         OnInteractedEvent?.Invoke(this);
@@ -109,6 +109,19 @@ public class Interact : MonoBehaviour
             curRound = newRound;
             Reset();
         //}
+    }
+
+    protected void TriggerRuleSystem(string ruleName)
+    {
+        if (RuleSystem.Instance.IsRuleActive(ruleName))
+        {
+            var rule = RuleSystem.Instance.GetRule(ruleName);
+            rule.OnRuleViolated(gameObject);
+        }
+        else
+        {
+            RuleSystem.Instance.SetPending(ruleName);
+        }
     }
 }
 

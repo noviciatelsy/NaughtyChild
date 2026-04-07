@@ -70,6 +70,12 @@ MonoBehaviour:
   ruleName: DontJustOpendoor
   interactable: 1
   interactHint: "\u6309E\u4EA4\u4E92"
+  col: {fileID: 0}
+  rend: {fileID: 0}
+  rb: {fileID: 0}
+  woodPrefab: {fileID: 3266765633029884450, guid: 91c7a1c96c8f8d941b6c3a786daf96a0,
+    type: 3}
+  woodCount: 2
 --- !u!1 &7569737190567323875
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class fence : Interact
         if (item != null && item.GetComponent<axe>() != null)
         {
             Debug.Log("ÓÃ¸«Í·¿³Î§À¸");
-
+            TriggerRuleSystem("DontDestroyfence");
             Breakfence();
         }
 
