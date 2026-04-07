@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -123,20 +124,56 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!context.performed) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Debug.DrawRay(ray.origin, ray.direction * 30f, Color.green, 2f);
+
+        bool hasValidTarget = false;
+        Interact interact = null;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 30f))
         {
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            Debug.DrawRay(ray.origin, ray.direction * 30f, Color.green, 2f);
-            if (Physics.Raycast(ray, out RaycastHit hit, 30f))
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 2f);
+
+            float distance = Vector3.Distance(transform.position, hit.point);
+
+            interact = hit.collider.GetComponent<Interact>();
+
+            // 核心判定：必须同时满足可交互+在判定范围内
+            if (interact != null &&
+                interact.Interactable &&
+                distance <= 5f)
             {
-                Debug.DrawLine(ray.origin, hit.point, Color.red, 2f);
-                Debug.Log("interact:" + hit);
-                Interact interactable = hit.collider.GetComponent<Interact>();
-                if (interactable != null && interactable.Interactable)
-                {
-                    interactable.InteractObject();
-                }
+                hasValidTarget = true;
             }
+        }
+
+        // =========================
+        // 行为逻辑
+        // =========================
+
+        if (PlayerHand.Instance.HasItem)
+        {
+            if (hasValidTarget)
+            {
+                // 有物体 + 点到交互物 → 只交互，不扔
+                interact.InteractObject();
+            }
+            else
+            {
+                // 有物体 + 没点到 → 扔
+                PlayerHand.Instance.ThrowItem(mainCamera.transform.forward);
+            }
+        }
+        else
+        {
+            if (hasValidTarget)
+            {
+                // 空手 + 点到 → 正常交互
+                interact.InteractObject();
+            }
+            // 空手 + 没点到 → 什么都不做
         }
     }
 
