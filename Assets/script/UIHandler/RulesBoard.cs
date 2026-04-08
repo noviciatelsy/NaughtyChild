@@ -25,7 +25,7 @@ public class RulesBoard : MonoBehaviour
         var text = instance.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (text != null)
         {
-            text.text = $"规则{ruleCount++}: {rule.name}";
+            text.text = $"规则{ruleCount++}: {rule.description}";
         }
     }
     private void HandleToggle(bool show)
