@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -14,16 +15,16 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     [SerializeField] private float sprintMultiplier = 2f;
     private Vector3 moveVelocity;
 
+
     [Header("跳跃参数")]
     private bool isjump = false;
     [SerializeField] private float jumpHeight = 2f;
 
     [Header("视角拖动")]
-    [SerializeField] private Transform cameraRoot; // 你要旋转的物体
-    [SerializeField] private Transform playertextureroot; // 你要旋转的物体
+    [SerializeField] private Transform cameraRoot; // 你要旋转的物�?
+    [SerializeField] private Transform playertextureroot; // 你要旋转的物�?
     [SerializeField] private float dragSensitivity = 0.2f;
     private bool isDragging = false;
-
     private bool isGrounded;
 
     private PlayerInput inputActions;
@@ -69,7 +70,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     }
 
     // =========================
-    // 移动（完全保留你的逻辑）
+    // 移动（完全保留你的逻辑�?
     // =========================
     private void Move()
     {
@@ -77,13 +78,13 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         if (isRushing && isGrounded)
             currentSpeed *= sprintMultiplier;
-        // ✅ 只取摄像机Y轴角度
+        // �? 只取摄像机Y轴角�?
         float y = cameraRoot.eulerAngles.y;
 
-        // ✅ 用角度构造一个“水平旋转”
+        // �? 用角度构造一个“水平旋转�?
         Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
 
-        // ✅ 得到方向（完全水平）
+        // �? 得到方向（完全水平）
         Vector3 forward = yawRotation * Vector3.forward;
         Vector3 right = yawRotation * Vector3.right;
 
@@ -122,7 +123,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         rb.velocity = v;
     }
 
-    
+
 
     // =========================
     // INPUT
@@ -180,14 +181,14 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         {
             if (hasValidTarget)
             {
-                // 有物体 + 点到交互物 → 只交互，不扔
+                // 有物�? + 点到交互�? �? 只交互，不扔
                 PlayerHand.Instance.UseItem(interact.gameObject);
             }
             else
             {
                 Vector3 throwDir = mainCamera.transform.forward;
 
-                // 从鼠标发射射线
+                // 从鼠标发射射�?
                 Ray ray1 = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
                 if (Physics.Raycast(ray1, out RaycastHit hit1, 300f))
@@ -203,10 +204,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         {
             if (hasValidTarget)
             {
-                // 空手 + 点到 → 正常交互
+                // 空手 + 点到 �? 正常交互
                 interact.InteractObject(null);
             }
-            // 空手 + 没点到 → 什么都不做
+            // 空手 + 没点�? �? 什么都不做
         }
     }
 
@@ -225,12 +226,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         Ray ray = new Ray(transform.position, dir);
 
-        // 画射线（黄色）
+        // 画射线（黄色�?
         Debug.DrawRay(ray.origin, ray.direction * 0.55f, Color.yellow);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 0.55f, ~0, QueryTriggerInteraction.Ignore))
         {
-            // 命中画红色
+            // 命中画红�?
             Debug.DrawLine(ray.origin, hit.point, Color.red);
 
             Debug.Log("撞墙: " + hit.collider.name);
@@ -254,11 +255,21 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         float mouseX = Mouse.current.delta.ReadValue().x;
 
         float angle = mouseX * dragSensitivity;
-
-        // 方式1：直接改欧拉角（你想要的方式）
         Vector3 euler = cameraRoot.eulerAngles;
         euler.y -= angle;
         cameraRoot.eulerAngles = euler;
         playertextureroot.eulerAngles = euler;
+    }
+
+    public void OnShowRules(InputAction.CallbackContext ctx)
+    {
+        if (ctx.started)
+        {
+            GameManager.Instance.RequestShowRules(true);
+        }
+        else if (ctx.canceled)
+        {
+            GameManager.Instance.RequestShowRules(false);
+        }
     }
 }

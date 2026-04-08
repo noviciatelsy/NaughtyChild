@@ -6,7 +6,7 @@ public class RuleSystem : MonoBehaviour
 {
     public static RuleSystem Instance { get; private set; }
 
-    // 所有规则SO（Inspector拖入）
+    // 所有规则SO（Inspector拖入�?
     [SerializeField] private List<Rule> allRules = new List<Rule>();
 
     // 初始就生效的规则
@@ -17,7 +17,7 @@ public class RuleSystem : MonoBehaviour
     private HashSet<Rule> activeRules;
     private Rule pendingRule;
 
-    // UI层事件接口
+    // UI层事件接�?
     public event Action<Rule> OnPendingRuleChanged;
     public event Action<Rule> OnRuleActivated;
     public event Action<Rule> OnRuleDeactivated;
@@ -80,7 +80,7 @@ public class RuleSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// 按名字设置候选
+    /// 按名字设置候�?
     /// </summary>
     public void SetPending(string ruleName)
     {
@@ -94,7 +94,7 @@ public class RuleSystem : MonoBehaviour
         {
             pendingRule = rule;
             OnPendingRuleChanged?.Invoke(pendingRule);
-            Debug.Log($"候选规则更新: {rule.name} (优先级 {rule.priority})");
+            Debug.Log($"候选规则更新: {rule.name} (优先级: {rule.priority})");
         }
     }
 
@@ -115,7 +115,7 @@ public class RuleSystem : MonoBehaviour
         if (activeRules.Add(rule))
         {
             OnRuleActivated?.Invoke(rule);
-            Debug.Log($"规则生效: {rule.name} (优先级 {rule.priority})，当前共 {activeRules.Count} 条");
+            Debug.Log($"规则生效: {rule.name} (优先级: {rule.priority})，当前共 {activeRules.Count} 条规则生效");
         }
     }
 

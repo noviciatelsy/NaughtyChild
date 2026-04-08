@@ -208,6 +208,9 @@ MonoBehaviour:
   ruleName: 
   interactable: 1
   interactHint: "\u6309E\u4EA4\u4E92"
+  col: {fileID: 0}
+  rend: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!65 &1309563658529080307
 BoxCollider:
   m_ObjectHideFlags: 0

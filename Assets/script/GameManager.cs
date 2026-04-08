@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public event Action<int> OnRoundCompleted;         //完成的轮次
     public event Action<Rule> OnRuleCommitted;         //本轮生效的规则
     public event Action OnGameRestarted;
+    public event Action<bool> OnShowRulesRequested;
 
     public int RoundToEnd = 10; //通关多少次可以游戏结束
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
@@ -62,7 +63,8 @@ public class GameManager : MonoBehaviour
 
         Rule committed = RuleSystem.Instance.CommitRound();
         OnRoundCompleted?.Invoke(CurrentRound);
-        OnRuleCommitted?.Invoke(committed);
+        if (committed != null)
+            OnRuleCommitted?.Invoke(committed);
 
         Debug.Log(committed != null
             ? $"第 {CurrentRound} 轮结束，新增规则: {committed.name}"
@@ -109,6 +111,20 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SetState(GameState.Playing);
     }
+    public void RequestShowRules(bool show)
+    {
+        if (show && CurrentState == GameState.Playing)
+        {
+            Pause();
+            OnShowRulesRequested?.Invoke(true);
+        }
+        else if (!show && CurrentState == GameState.Paused)
+        {
+            Resume();
+            OnShowRulesRequested?.Invoke(false);
+        }
+    }
+
     public void GameOver()
     {
         SetState(GameState.GameOver);

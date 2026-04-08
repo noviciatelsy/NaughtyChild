@@ -127,6 +127,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShowRules"",
+                    ""type"": ""Button"",
+                    ""id"": ""b07b48b9-78e6-4163-b8bd-e7aef558dc83"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -228,6 +237,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""28c94f53-fed9-43d3-9597-2b4f33830159"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShowRules"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +260,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_GameMode_Interact = m_GameMode.FindAction("Interact", throwIfNotFound: true);
         m_GameMode_isRushing = m_GameMode.FindAction("isRushing", throwIfNotFound: true);
         m_GameMode_Jump = m_GameMode.FindAction("Jump", throwIfNotFound: true);
+        m_GameMode_ShowRules = m_GameMode.FindAction("ShowRules", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -324,6 +345,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameMode_Interact;
     private readonly InputAction m_GameMode_isRushing;
     private readonly InputAction m_GameMode_Jump;
+    private readonly InputAction m_GameMode_ShowRules;
     /// <summary>
     /// Provides access to input actions defined in input action map "GameMode".
     /// </summary>
@@ -351,6 +373,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GameMode/Jump".
         /// </summary>
         public InputAction @Jump => m_Wrapper.m_GameMode_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action "GameMode/ShowRules".
+        /// </summary>
+        public InputAction @ShowRules => m_Wrapper.m_GameMode_ShowRules;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -389,6 +415,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @ShowRules.started += instance.OnShowRules;
+            @ShowRules.performed += instance.OnShowRules;
+            @ShowRules.canceled += instance.OnShowRules;
         }
 
         /// <summary>
@@ -412,6 +441,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @ShowRules.started -= instance.OnShowRules;
+            @ShowRules.performed -= instance.OnShowRules;
+            @ShowRules.canceled -= instance.OnShowRules;
         }
 
         /// <summary>
@@ -480,5 +512,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShowRules" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShowRules(InputAction.CallbackContext context);
     }
 }
