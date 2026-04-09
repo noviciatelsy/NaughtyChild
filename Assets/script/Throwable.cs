@@ -59,17 +59,21 @@ public class Throwable : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
 
-        Collider selfCol = GetComponent<Collider>();
+        //Collider selfCol = GetComponent<Collider>();
 
-        if (playerColliders != null)
-        {
-            foreach (var col in playerColliders)
-            {
-                Physics.IgnoreCollision(selfCol, col, true);
-            }
-        }
+        //if (playerColliders != null)
+        //{
+        //    foreach (var col in playerColliders)
+        //    {
+        //        Physics.IgnoreCollision(selfCol, col, true);
+        //    }
+        //}
 
-        GetComponent<Collider>().enabled = false;
+        //GetComponent<Collider>().enabled = false;
+        SetIgnorePlayerCollision(true);
+
+        foreach (var col in GetAllSelfColliders())
+            col.enabled = false;
     }
 
     public void OnThrow(Vector3 dir)
@@ -80,21 +84,26 @@ public class Throwable : MonoBehaviour
 
         rb.isKinematic = false;
         rb.useGravity = true;
-        GetComponent<Collider>().enabled = true;
+        //GetComponent<Collider>().enabled = true;
 
-        Collider selfCol = GetComponent<Collider>();
-        if (playerColliders != null)
-        {
-            foreach (var col in playerColliders)
-            {
-                Physics.IgnoreCollision(selfCol, col, true);
-            }
-        }
+        //Collider selfCol = GetComponent<Collider>();
+        //if (playerColliders != null)
+        //{
+        //    foreach (var col in playerColliders)
+        //    {
+        //        Physics.IgnoreCollision(selfCol, col, true);
+        //    }
+        //}
+        foreach (var col in GetAllSelfColliders())
+            col.enabled = true;
+
+        SetIgnorePlayerCollision(true);
 
         rb.velocity = cachedVelocity;
 
-        StartCoroutine(RestoreCollision(selfCol, 0.3f));
+        StartCoroutine(RestoreCollision(0.3f));
     }
+
 
     public virtual void OnUse(GameObject target)
     {
@@ -217,18 +226,48 @@ public class Throwable : MonoBehaviour
         lr.colorGradient = gradient;
     }
 
-    private IEnumerator RestoreCollision(Collider selfCol, float delay)
+    //private IEnumerator RestoreCollision(Collider selfCol, float delay)
+    //{
+    //    yield return new WaitForSeconds(delay);
+
+    //    if (playerColliders != null)
+    //    {
+    //        foreach (var col in playerColliders)
+    //        {
+    //            if (col != null && selfCol != null)
+    //            {
+    //                Physics.IgnoreCollision(selfCol, col, false);
+    //            }
+    //        }
+    //    }
+    //}
+    private IEnumerator RestoreCollision(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        if (playerColliders != null)
+        SetIgnorePlayerCollision(false);
+    }
+
+    private Collider[] GetAllSelfColliders()
+    {
+        return GetComponentsInChildren<Collider>(true);
+    }
+
+    private void SetIgnorePlayerCollision(bool ignore)
+    {
+        if (playerColliders == null) return;
+
+        Collider[] selfCols = GetAllSelfColliders();
+
+        foreach (var selfCol in selfCols)
         {
-            foreach (var col in playerColliders)
+            if (selfCol == null) continue;
+
+            foreach (var playerCol in playerColliders)
             {
-                if (col != null && selfCol != null)
-                {
-                    Physics.IgnoreCollision(selfCol, col, false);
-                }
+                if (playerCol == null) continue;
+
+                Physics.IgnoreCollision(selfCol, playerCol, ignore);
             }
         }
     }
