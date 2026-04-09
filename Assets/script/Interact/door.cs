@@ -13,7 +13,7 @@ public class door : Interact
     private List<GameObject> spawnedWoods = new List<GameObject>();
     public override void InteractObject(GameObject item)
     {
-        if (isBroken || isOpening) return;
+        if (isBroken) return;
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
@@ -25,8 +25,9 @@ public class door : Interact
             return;
         }
 
+        if (isOpening) return;
         // 默认逻辑
-        Debug.Log("普通交互围栏");
+        Debug.Log("普通交互门");
         base.InteractObject(item);
         Openthedoor();
     }
