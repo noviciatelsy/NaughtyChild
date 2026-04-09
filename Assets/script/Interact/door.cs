@@ -42,6 +42,17 @@ public class door : Interact
         }
     }
 
+    /// <summary>
+    /// 狗狗等外部调用：直接开门，不触发规则
+    /// </summary>
+    public void Open()
+    {
+        if (!isOpening && !isBroken)
+        {
+            StartCoroutine(OpenDoor());
+        }
+    }
+
     public override void Reset()
     {
         StopAllCoroutines();

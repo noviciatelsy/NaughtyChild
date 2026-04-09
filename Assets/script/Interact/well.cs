@@ -11,6 +11,7 @@ public class well : Interact
     [SerializeField] private GameObject rockPrefab;
     [SerializeField] private int rockCount = 3;
     private List<GameObject> spawnedrocks = new List<GameObject>();
+    private bool usedThisRound = false;
     protected override void OnInteracted(GameObject item)
     {
         if (isBroken) return;
@@ -23,11 +24,14 @@ public class well : Interact
             return;
         }
 
-        if (RuleSystem.Instance.IsRuleActive("DontUsewell"))
+        if (usedThisRound || RuleSystem.Instance.IsRuleActive("DontUsewell"))
         {
             Debug.Log("规则禁止使用井");
             return;
         }
+
+        usedThisRound = true;
+        RuleSystem.Instance.SetPending("DontUsewell");
         TransportPlayer();
 
         Debug.Log("玩家被传送");
@@ -35,7 +39,6 @@ public class well : Interact
 
     private void TransportPlayer()
     {
-        TriggerRuleSystem("DontUsewell");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
         {
@@ -96,6 +99,7 @@ public class well : Interact
     {
         base.Reset();
         isBroken = false;
+        usedThisRound = false;
 
         // 删除所有生成的木板
         foreach (var wood in spawnedrocks)

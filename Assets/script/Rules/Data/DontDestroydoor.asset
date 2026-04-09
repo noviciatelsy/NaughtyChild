@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DontDestroydoor
   m_EditorClassIdentifier: 
   priority: 98
-  description: 
+  description: "\u4E0D\u8981\u62C6\u95E8!"

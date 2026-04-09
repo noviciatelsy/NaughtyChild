@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DontStepOnGrass
   m_EditorClassIdentifier: 
   priority: 99
-  description: 
+  description: "\u4E0D\u8981\u8E29\u8349\u576A!"
