@@ -150,28 +150,49 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     {
         if (!context.performed) return;
 
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = mainCamera.ScreenPointToRay(mousePos);
+
         Debug.DrawRay(ray.origin, ray.direction * 300f, Color.green, 2f);
+
+        float sphereRadius = 0.3f; // 👉 可调（0.2~0.5手感最好）
 
         bool hasValidTarget = false;
         Interact interact = null;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 300f))
+        RaycastHit[] hits = Physics.SphereCastAll(ray, sphereRadius, 300f);
+
+        Interact bestInteract = null;
+        float bestScore = float.MinValue;
+
+        foreach (var hit in hits)
         {
-            Debug.DrawLine(ray.origin, hit.point, Color.red, 2f);
+            Interact temp = hit.collider.GetComponentInParent<Interact>();
+            if (temp == null || !temp.Interactable)
+                continue;
 
-            float distance = Vector3.Distance(transform.position, hit.point);
+            float distance = Vector3.Distance(transform.position, temp.transform.position);
+            if (distance > 3f)
+                continue;
 
-            interact = hit.collider.GetComponent<Interact>();
+            // 🎯 评分机制（核心）
+            Vector3 toTarget = (temp.transform.position - ray.origin).normalized;
+            float alignment = Vector3.Dot(ray.direction, toTarget); // 越接近1越准
 
-            // 核心判定：必须同时满足可交互+在判定范围内
-            if (interact != null &&
-                interact.Interactable &&
-                distance <= 2f)
+            float score = alignment * 2f - distance * 0.2f;
+
+            if (score > bestScore)
             {
-                hasValidTarget = true;
+                bestScore = score;
+                bestInteract = temp;
             }
+
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
         }
+
+        // 最终结果
+        hasValidTarget = bestInteract != null;
+        interact = bestInteract;
 
         // =========================
         // 行为逻辑

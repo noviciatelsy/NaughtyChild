@@ -18,6 +18,11 @@ public class tree : Interact
     private Coroutine fallCoroutine;
 
     private List<GameObject> spawnedItems = new List<GameObject>();
+    private Renderer[] allRenderers;
+    private void Awake()
+    {
+        allRenderers = GetComponentsInChildren<Renderer>(true); // true = 包含inactive
+    }
 
     protected override void OnInteracted(GameObject item)
     {
@@ -114,7 +119,7 @@ public class tree : Interact
         // 隐藏本体
         col.enabled = false;
         rend.enabled = false;
-
+        SetRenderers(false);
         SpawnBoards();
 
         Debug.Log("树被砍倒并完全消失");
@@ -142,7 +147,7 @@ public class tree : Interact
     public override void Reset()
     {
         base.Reset();
-
+        SetRenderers(true);
         hitCount = 0;
         isFallen = false;
         isDestroyed = false;
@@ -154,5 +159,14 @@ public class tree : Interact
         }
 
         spawnedItems.Clear();
+    }
+
+    private void SetRenderers(bool state)
+    {
+        foreach (var r in allRenderers)
+        {
+            if (r != null)
+                r.enabled = state;
+        }
     }
 }
