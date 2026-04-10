@@ -8,12 +8,14 @@ public class RulesBoard : MonoBehaviour
 {
     public GameObject rulePrefab;
     public RectTransform content;
-    [SerializeField] private RectTransform ort; // 拖入：隐藏位置的空物体
-    [SerializeField] private RectTransform drt; // 拖入：显示位置的空物体
+    public Image Panel;
+    [SerializeField] private RectTransform ort; 
+    [SerializeField] private RectTransform drt; 
     private RectTransform selfRect;
     private int ruleCount = 1;
     void Start()
     {
+        Panel.gameObject.SetActive(false);
         selfRect = GetComponent<RectTransform>();
         GameManager.Instance.OnRuleCommitted += (r) => { AddRuleData(r); };
         GameManager.Instance.OnShowRulesRequested += (show) => { HandleToggle(show); };
@@ -32,10 +34,15 @@ public class RulesBoard : MonoBehaviour
     {
         selfRect.DOKill();
         transform.DOKill();
+        Panel.DOKill();
         transform.localScale = Vector3.one;
         transform.localRotation = Quaternion.identity;
         if (show)
         {
+            Panel.gameObject.SetActive(true);
+            Panel.DOFade(0.5f, 0.3f)
+                .SetEase(Ease.InCubic)
+                .SetUpdate(true);
             selfRect.DOAnchorPosX(drt.anchoredPosition.x, 0.4f)
                 .SetEase(Ease.OutCubic)
                 .SetUpdate(true);
@@ -46,6 +53,10 @@ public class RulesBoard : MonoBehaviour
         }
         else
         {
+            Panel.DOFade(0f, 0.3f)
+                .SetEase(Ease.InCubic)
+                .SetUpdate(true)
+                .OnComplete(() => Panel.gameObject.SetActive(false));
             selfRect.DOAnchorPosX(ort.anchoredPosition.x, 0.3f)
                 .SetEase(Ease.InCubic)
                 .SetUpdate(true);
