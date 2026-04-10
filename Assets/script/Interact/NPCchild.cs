@@ -83,13 +83,14 @@ public class NPCchild : Interact
         }
 
         // 广告牌
+        // 精灵广告牌：始终面向摄像机
         if (spriteTransform != null)
         {
             Camera cam = Camera.main;
             if (cam != null)
             {
                 Vector3 dir = cam.transform.position - spriteTransform.position;
-                dir.y = 0;
+                dir.y = 0; // 只水平旋转
                 if (dir != Vector3.zero)
                     spriteTransform.rotation = Quaternion.LookRotation(-dir);
             }
