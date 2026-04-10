@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         RuleSystem.Instance.Initialize();
-        StartRound();
     }
     public void StartRound()
     {
