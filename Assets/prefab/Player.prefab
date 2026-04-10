@@ -53,10 +53,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61cf8fc465cd19345902db5055c89d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 6
+  moveSpeed: 7
   mouseSensitivity: 0.1
-  sprintMultiplier: 2
-  jumpHeight: 0.8
+  sprintMultiplier: 1.5
+  jumpHeight: 0.9
   cameraRoot: {fileID: 1881431587542031479}
   playertextureroot: {fileID: 4927894169289269132}
   dragSensitivity: 0.2
