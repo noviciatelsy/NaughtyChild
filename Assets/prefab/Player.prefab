@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8444532352195353830}
   - component: {fileID: 3847868900530879554}
   - component: {fileID: 7142754227541913523}
-  - component: {fileID: 350758502854878574}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -53,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  mouseSensitivity: 0.1
+  mouseSensitivity: 0.5
   sprintMultiplier: 2
   jumpHeight: 0.8
   cameraRoot: {fileID: 1881431587542031479}
@@ -123,27 +122,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handPoint: {fileID: 5773131888986765952}
   currentItem: {fileID: 0}
---- !u!95 &350758502854878574
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165251337322534799}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &712634909359236785
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 3111768330998009209}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.9999981, z: -48.267952}
+  m_LocalPosition: {x: 0, y: 0.9999981, z: -48.26795}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -256,7 +234,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 15
+  m_Priority: 10
   m_StandbyUpdate: 1
   m_LookAt: {fileID: 6761858355269966502}
   m_Follow: {fileID: 6761858355269966502}
