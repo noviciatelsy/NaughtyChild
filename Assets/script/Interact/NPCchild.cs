@@ -17,7 +17,7 @@ public class NPCchild : Interact
     [SerializeField] private Transform doorApproachPoint;
     [SerializeField] private float doorReachDistance = 1f;
 
-    [Header("完成后位置（可选）")]
+    [Header("完成后位置")]
     [SerializeField] private Transform finishPoint;
 
     [Header("广告牌精灵")]
@@ -25,7 +25,6 @@ public class NPCchild : Interact
 
     private NavMeshAgent agent;
     private NPCState currentState = NPCState.Idle;
-
     private bool hasHelped = false;
 
     private void Awake()
@@ -37,7 +36,7 @@ public class NPCchild : Interact
         agent.updateUpAxis = false;
     }
 
-    // 关键：带“斧头判断”的交互
+    // ✅ 和 Dog 一样：交互直接触发状态
     protected override void OnInteracted(GameObject item)
     {
         if (!Interactable) return;
@@ -48,14 +47,13 @@ public class NPCchild : Interact
             return;
         }
 
-        // 只有 axe 才触发
+        // ⭐ 关键：只有 axe 才触发
         if (item != null && item.GetComponent<axe>() != null)
         {
             Debug.Log("NPC接收到斧头，准备去开门");
 
             hasHelped = true;
 
-            // 规则系统（可选）
             TriggerRuleSystem("DontAskNPCForHelp");
             if (RuleSystem.Instance.IsRuleActive("DontAskNPCForHelp"))
                 return;
@@ -70,8 +68,7 @@ public class NPCchild : Interact
 
     private void Update()
     {
-        // 到门逻辑
-        if (currentState == NPCState.GoingToDoor && agent.enabled && agent.isOnNavMesh)
+        if (currentState == NPCState.GoingToDoor && agent.enabled)
         {
             if (!agent.pathPending && agent.remainingDistance <= doorReachDistance)
             {
@@ -85,7 +82,7 @@ public class NPCchild : Interact
             }
         }
 
-        // 广告牌朝向
+        // 广告牌
         if (spriteTransform != null)
         {
             Camera cam = Camera.main;
@@ -122,7 +119,6 @@ public class NPCchild : Interact
             case NPCState.Done:
                 agent.enabled = false;
 
-                // 可选：移动到完成点（比如站岗）
                 if (finishPoint != null)
                 {
                     transform.position = finishPoint.position;
