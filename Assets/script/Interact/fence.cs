@@ -10,20 +10,21 @@ public class fence : Interact
     [SerializeField] private int woodCount = 2;
     private List<GameObject> spawnedWoods = new List<GameObject>();
 
-    protected override void OnInteracted(GameObject item)
+    protected override bool OnInteracted(GameObject item)
     {
-        if (isBroken) return;
+        if (isBroken) return false;
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
             TriggerRuleSystem("DontDestroyfence");
-            if (RuleSystem.Instance.IsRuleActive("DontDestroyfence")) return;
+            if (RuleSystem.Instance.IsRuleActive("DontDestroyfence")) return true;
             Debug.Log("用斧头砍围栏");
             Breakfence();
+            return true;
         }
-
-        // 默认逻辑
-        Debug.Log("普通交互围栏");
+        else return false; //围栏只有与斧子可以交互，其他物品无效
+        //// 默认逻辑
+        //Debug.Log("普通交互围栏");
     }
 
     private void Breakfence()

@@ -48,11 +48,13 @@ public class Interact : MonoBehaviour
             GameManager.Instance.OnRoundStarted -= OnRoundChanged;
     }
 
-    public virtual void InteractObject(GameObject item)
+    public virtual bool InteractObject(GameObject item)
     {
-        if (!Interactable) return;  
+        if (!Interactable) return false;  
 
         Debug.Log("与" + this.name + "交互");
+
+        bool success = false;
         if (item == null)
         {
             var throwable = GetComponent<Throwable>();
@@ -75,11 +77,18 @@ public class Interact : MonoBehaviour
         //    RuleSystem.Instance.SetPending(ruleName);
         //}
 
-        OnInteracted(item); // 传下去
-        OnInteractedEvent?.Invoke(this);
+        // 子类逻辑决定是否成功
+        success |= OnInteracted(item);
+
+        if (success)
+        {
+            OnInteractedEvent?.Invoke(this);
+        }
+
+        return success;
     }
 
-    protected virtual void OnInteracted(GameObject item) { }
+    protected virtual bool OnInteracted(GameObject item) { return false; }
 
     public void SetInteractable(bool value)
     {

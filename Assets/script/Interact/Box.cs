@@ -10,16 +10,18 @@ public class Box : Interact
     [SerializeField] private int woodCount = 3;
     private List<GameObject> spawnedWoods = new List<GameObject>();
 
-    protected override void OnInteracted(GameObject item)
+    protected override bool OnInteracted(GameObject item)
     {
-        if (isBroken) return;
+        if (isBroken) return false;
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
             Debug.Log("用斧头砍箱子");
 
             BreakBox();
+            return true;
         }
+        else return false;//其他情况不会与箱子交互
 
         // 默认逻辑
         Debug.Log("普通交互箱子");

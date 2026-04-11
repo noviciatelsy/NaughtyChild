@@ -24,16 +24,15 @@ public class tree : Interact
         allRenderers = GetComponentsInChildren<Renderer>(true); // true = 包含inactive
     }
 
-    protected override void OnInteracted(GameObject item)
+    protected override bool OnInteracted(GameObject item)
     {
-        Debug.Log("?");
-        if (isDestroyed) return;
+        if (isDestroyed) return false;
 
         // 1. 必须是斧子
         if (item == null || item.GetComponent<axe>() == null)
         {
             Debug.Log("不是斧子，无法砍树");
-            return;
+            return false;
         }
 
         hitCount++;
@@ -55,6 +54,7 @@ public class tree : Interact
         {
             DestroyTree();
         }
+        return true;
     }
 
     private void FallTree()

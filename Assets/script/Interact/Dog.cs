@@ -35,25 +35,26 @@ public class Dog : Interact
         agent.updateUpAxis = false;
     }
 
-    public override void InteractObject(GameObject item)
+    public override bool InteractObject(GameObject item)
     {
-        if (!Interactable) return;
+        if (!Interactable) return false;
         if (RuleSystem.Instance.IsRuleActive("DontAskHelpFromDog"))
         {
             var rule = RuleSystem.Instance.GetRule("DontAskHelpFromDog");
             rule.OnRuleViolated(gameObject);
-            return;
+            return true;
         }
 
         if (hasHelpedThisRound)
         {
             Debug.Log("狗狗本轮已经帮过忙了");
-            return;
+            return true;
         }
         hasHelpedThisRound = true;
         RuleSystem.Instance.SetPending("DontAskHelpFromDog");
         SetState(DogState.GoingToDoor);
         Debug.Log("狗狗出发去开门");
+        return true;
     }
 
     private void Update()

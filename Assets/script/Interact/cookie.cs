@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Cookie : Interact
 {
-    public override void InteractObject(GameObject item)
+    public override bool InteractObject(GameObject item)
     {
         base.InteractObject(item);
         GameManager.Instance.CompleteRound();
+        return true;
     }
 
 }

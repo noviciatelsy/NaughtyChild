@@ -12,22 +12,22 @@ public class well : Interact
     [SerializeField] private int rockCount = 3;
     private List<GameObject> spawnedrocks = new List<GameObject>();
     private bool usedThisRound = false;
-    protected override void OnInteracted(GameObject item)
+    protected override bool OnInteracted(GameObject item)
     {
-        if (isBroken) return;
+        if (isBroken) return false;
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
-            Debug.Log("用斧头砍箱子");
+            Debug.Log("用斧头砍井盖?");
 
             BreakWell();
-            return;
+            return true;
         }
 
         if (usedThisRound || RuleSystem.Instance.IsRuleActive("DontUsewell"))
         {
             Debug.Log("规则禁止使用井");
-            return;
+            return true;
         }
 
         usedThisRound = true;
@@ -35,6 +35,7 @@ public class well : Interact
         TransportPlayer();
 
         Debug.Log("玩家被传送");
+        return true;
     }
 
     private void TransportPlayer()
@@ -75,7 +76,7 @@ public class well : Interact
 
         SpawnWoods();
 
-        Debug.Log("箱子被破坏（掉落木板）");
+        Debug.Log("井盖被破坏（掉落木板）");
     }
 
     private void SpawnWoods()

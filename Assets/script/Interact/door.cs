@@ -11,25 +11,26 @@ public class door : Interact
     [SerializeField] private GameObject woodPrefab;
     [SerializeField] private int woodCount = 2;
     private List<GameObject> spawnedWoods = new List<GameObject>();
-    public override void InteractObject(GameObject item)
+    public override bool InteractObject(GameObject item)
     {
-        if (isBroken) return;
+        if (isBroken) return false;
         //判断是否是 axe
         if (item != null && item.GetComponent<axe>() != null)
         {
             TriggerRuleSystem("DontDestroydoor");
-            if (RuleSystem.Instance.IsRuleActive("DontDestroydoor")) return;
+            if (RuleSystem.Instance.IsRuleActive("DontDestroydoor")) return true;
 
             Debug.Log("用斧头砍门");
             Breakfence();
-            return;
+            return true;
         }
 
-        if (isOpening) return;
+        if (isOpening) return false;
         // 默认逻辑
         Debug.Log("普通交互门");
         base.InteractObject(item);
         Openthedoor();
+        return true;
     }
 
 

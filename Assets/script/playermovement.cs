@@ -15,7 +15,6 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     [SerializeField] private float sprintMultiplier = 2f;
     private Vector3 moveVelocity;
 
-
     [Header("跳跃参数")]
     private bool isjump = false;
     [SerializeField] private float jumpHeight = 2f;
@@ -26,6 +25,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     [SerializeField] private float dragSensitivity = 0.2f;
     private bool isDragging = false;
     private bool isGrounded;
+    [SerializeField] private float holdThreshold = 0.5f; // 超过这个时间算长按
+    private float mouseDownTime;
+    private bool isHolding = false;
+    private bool isLongPress = false;
 
     private PlayerInput inputActions;
     private Vector2 moveInput;
@@ -45,7 +48,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
-        rb.useGravity = true; // ✅关键：用Unity自带重力
+        rb.useGravity = true; // 关键：用Unity自带重力
         rb.isKinematic = false;
     }
 
@@ -148,8 +151,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.canceled) return;
+        float holdTime = Time.time - mouseDownTime;
 
+        // 用时间判断，而不是 isLongPress
+        if (holdTime > holdThreshold) return;
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(mousePos);
 
@@ -266,7 +272,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private void HandleMouseDrag()
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
             isDragging = true;
+            mouseDownTime = Time.time;
+        }
 
         if (Mouse.current.leftButton.wasReleasedThisFrame)
             isDragging = false;

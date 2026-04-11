@@ -37,17 +37,17 @@ public class NPCchild : Interact
     }
 
     // ✅ 和 Dog 一样：交互直接触发状态
-    protected override void OnInteracted(GameObject item)
+    protected override bool OnInteracted(GameObject item)
     {
-        if (!Interactable) return;
+        if (!Interactable) return false;
 
         if (hasHelped)
         {
             Debug.Log("NPC已经帮过了");
-            return;
+            return true;
         }
 
-        // ⭐ 关键：只有 axe 才触发
+        // 关键：只有 axe 才触发
         if (item != null && item.GetComponent<axe>() != null)
         {
             Debug.Log("NPC接收到斧头，准备去开门");
@@ -56,14 +56,16 @@ public class NPCchild : Interact
 
             TriggerRuleSystem("DontAskNPCForHelp");
             if (RuleSystem.Instance.IsRuleActive("DontAskNPCForHelp"))
-                return;
+                return true;
 
             SetState(NPCState.GoingToDoor);
         }
         else
         {
             Debug.Log("NPC不理你：没有斧头");
+            return false;
         }
+        return false;
     }
 
     private void Update()

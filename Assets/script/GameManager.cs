@@ -146,11 +146,11 @@ public class GameManager : MonoBehaviour
             {
                 rb.velocity = Vector3.zero; // 清速度
                 rb.angularVelocity = Vector3.zero;
-                rb.position = new Vector3(0f, 1f, -2f);
+                rb.position = new Vector3(0f, 0.5f, -2f);
             }
             else
             {
-                player.transform.position = new Vector3(0f, 1f, -2f);
+                player.transform.position = new Vector3(0f, 0.5f, -2f);
             }
         }
     }
