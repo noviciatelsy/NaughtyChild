@@ -174,4 +174,14 @@ public class tree : Interact
                 r.enabled = state;
         }
     }
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trigger:" + this.name);
+        if (!other.CompareTag("Player")) return;
+        if (!isFallen) return;
+        if (GameManager.Instance.CurrentState != GameState.Playing) return;
+        Debug.Log("触发规则:不要碰到树！");
+        TriggerRuleSystem("DontstandOntree");
+    }
 }
