@@ -59,6 +59,8 @@ MonoBehaviour:
   door: {fileID: 0}
   doorApproachPoint: {fileID: 0}
   doorReachDistance: 1
+  wanderRadius: 10
+  wanderInterval: 4
   finishPoint: {fileID: 0}
   spriteTransform: {fileID: 6274232457575719528}
 --- !u!195 &350974453969712367
@@ -71,7 +73,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

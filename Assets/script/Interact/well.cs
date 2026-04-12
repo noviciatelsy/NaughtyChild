@@ -26,6 +26,7 @@ public class well : Interact
 
         if (usedThisRound || RuleSystem.Instance.IsRuleActive("DontUsewell"))
         {
+            TriggerRuleSystem("DontUsewell");
             Debug.Log("规则禁止使用井");
             return true;
         }

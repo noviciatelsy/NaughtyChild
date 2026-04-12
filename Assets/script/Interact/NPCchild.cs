@@ -17,6 +17,12 @@ public class NPCchild : Interact
     [SerializeField] private Transform doorApproachPoint;
     [SerializeField] private float doorReachDistance = 1f;
 
+    [Header("Idle游走")]
+    [SerializeField] private float wanderRadius = 5f;     // 游走半径
+    [SerializeField] private float wanderInterval = 4f;   // 每隔多久换目标
+    private float wanderTimer;
+    private Vector3 startPoint; // 初始中心点
+
     [Header("完成后位置")]
     [SerializeField] private Transform finishPoint;
 
@@ -36,7 +42,12 @@ public class NPCchild : Interact
         agent.updateUpAxis = false;
     }
 
-    // ✅ 和 Dog 一样：交互直接触发状态
+    private void Start()
+    {
+        startPoint = transform.position;
+    }
+
+    // 和 Dog 一样：交互直接触发状态
     protected override bool OnInteracted(GameObject item)
     {
         if (!Interactable) return false;
@@ -70,6 +81,11 @@ public class NPCchild : Interact
 
     private void Update()
     {
+        if (currentState == NPCState.Idle)
+        {
+            HandleIdleWander();
+        }
+
         if (currentState == NPCState.GoingToDoor && agent.enabled)
         {
             if (!agent.pathPending && agent.remainingDistance <= doorReachDistance)
@@ -106,7 +122,8 @@ public class NPCchild : Interact
         switch (newState)
         {
             case NPCState.Idle:
-                agent.enabled = false;
+                agent.enabled = true;
+                wanderTimer = wanderInterval; // 立刻选点
                 break;
 
             case NPCState.GoingToDoor:
@@ -139,5 +156,38 @@ public class NPCchild : Interact
         agent.enabled = false;
 
         SetState(NPCState.Idle);
+    }
+
+    private void HandleIdleWander()
+    {
+        if (!agent.enabled)
+            agent.enabled = true;
+
+        wanderTimer += Time.deltaTime;
+
+        if (wanderTimer >= wanderInterval)
+        {
+            Vector3 randomPos = GetRandomNavMeshPoint(startPoint, wanderRadius);
+
+            agent.SetDestination(randomPos);
+
+            wanderTimer = 0f;
+        }
+    }
+    private Vector3 GetRandomNavMeshPoint(Vector3 center, float radius)
+    {
+        for (int i = 0; i < 10; i++) // 最多尝试10次
+        {
+            Vector3 randomPos = center + Random.insideUnitSphere * radius;
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPos, out hit, 2f, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        // fallback（找不到就原地）
+        return center;
     }
 }

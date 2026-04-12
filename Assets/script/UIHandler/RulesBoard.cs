@@ -35,7 +35,7 @@ public class RulesBoard : MonoBehaviour
         selfRect.DOKill();
         transform.DOKill();
         Panel.DOKill();
-        transform.localScale = Vector3.one;
+        transform.localScale = Vector3.one * 1.3f;
         transform.localRotation = Quaternion.identity;
         if (show)
         {
@@ -46,9 +46,9 @@ public class RulesBoard : MonoBehaviour
             selfRect.DOAnchorPosX(drt.anchoredPosition.x, 0.4f)
                 .SetEase(Ease.OutCubic)
                 .SetUpdate(true);
-            transform.DOPunchScale(Vector3.one * 0.1f, 0.4f, 6, 0.5f)
+            transform.DOPunchScale(Vector3.one * 0.15f, 0.5f, 8, 1.0f)
                 .SetUpdate(true);
-            transform.DOPunchRotation(new Vector3(0, 0, 5f), 0.1f, 8, 0.5f)
+            transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.15f, 8, 1.2f)
                 .SetUpdate(true);
         }
         else
