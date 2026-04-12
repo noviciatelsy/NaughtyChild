@@ -11,6 +11,7 @@ public class tree : Interact
 
     [Header("µπœ¬Œª÷√")]
     [SerializeField] private Transform fallenTransform;
+    [SerializeField] private GameObject hideOnFallObject;
 
     private int hitCount = 0;
     private bool isFallen = false;
@@ -96,6 +97,8 @@ public class tree : Interact
         transform.position = targetPos;
         transform.rotation = targetRot;
 
+        if (hideOnFallObject != null)
+            hideOnFallObject.SetActive(false);
         fallCoroutine = null;
     }
 
@@ -152,6 +155,8 @@ public class tree : Interact
         isFallen = false;
         isDestroyed = false;
 
+        if (hideOnFallObject != null)
+            hideOnFallObject.SetActive(true);
         foreach (var obj in spawnedItems)
         {
             if (obj != null)

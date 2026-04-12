@@ -9,6 +9,13 @@ public class Box : Interact
     [SerializeField] private GameObject woodPrefab;
     [SerializeField] private int woodCount = 3;
     private List<GameObject> spawnedWoods = new List<GameObject>();
+    private Renderer[] allRenderers;
+    private void Awake()
+    {
+        // 获取所有子物体 Renderer（包括 SpriteRenderer）
+        allRenderers = GetComponentsInChildren<Renderer>(true);
+    }
+
 
     protected override bool OnInteracted(GameObject item)
     {
@@ -33,7 +40,11 @@ public class Box : Interact
 
         // 不Destroy，而是隐藏
         col.enabled = false;
-        rend.enabled = false;
+        //rend.enabled = false;
+        foreach (var r in allRenderers)
+        {
+            r.enabled = false;
+        }
 
         SpawnWoods();
 
@@ -42,10 +53,17 @@ public class Box : Interact
 
     private void SpawnWoods()
     {
+        float radius = 0.5f;
+
         for (int i = 0; i < woodCount; i++)
         {
-            Vector3 offset = Random.insideUnitSphere * 0.5f;
-            offset.y = Mathf.Abs(offset.y); // 往上散开一点
+            float angle = i * Mathf.PI * 2 / woodCount;
+
+            Vector3 offset = new Vector3(
+                Mathf.Cos(angle),
+                Random.Range(0.1f, 1.5f),
+                Mathf.Sin(angle)
+            ) * radius;
 
             GameObject wood = Instantiate(
                 woodPrefab,
@@ -53,7 +71,7 @@ public class Box : Interact
                 Quaternion.identity
             );
 
-            spawnedWoods.Add(wood); // 记录！
+            spawnedWoods.Add(wood);
         }
     }
 
@@ -61,6 +79,11 @@ public class Box : Interact
     {
         base.Reset();
         isBroken = false;
+        foreach (var r in allRenderers)
+        {
+            if (r != null)
+                r.enabled = true;
+        }
 
         // 删除所有生成的木板
         foreach (var wood in spawnedWoods)

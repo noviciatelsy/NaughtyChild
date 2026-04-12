@@ -188,6 +188,7 @@ public class Throwable : MonoBehaviour
         point = ray.origin + ray.direction * 20f;
         return false;
     }
+
     private Vector3 CalculateInitialVelocity(Vector3 start, Vector3 target, float t)
     {
         return (target - start - 0.5f * Physics.gravity * t * t) / t;
@@ -196,9 +197,9 @@ public class Throwable : MonoBehaviour
     {
         float distance = Vector3.Distance(start, target);
 
-        // ⭐关键：控制投掷节奏（你可以调这个）
-        float minTime = 0.2f;
-        float maxTime = 3.0f;
+        // 关键：控制投掷节奏（你可以调这个）
+        float minTime = 0.15f;
+        float maxTime = 2.0f;
 
         // 距离归一化
         float t = Mathf.Clamp(distance / 15f, 0f, 1f);
