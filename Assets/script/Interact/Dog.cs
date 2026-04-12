@@ -38,9 +38,9 @@ public class Dog : Interact
     public override bool InteractObject(GameObject item)
     {
         if (!Interactable) return false;
-        if (RuleSystem.Instance.IsRuleActive("DontAskHelpFromDog"))
+        if (RuleSystem.Instance.IsRuleActive("AskHelpFromDog"))
         {
-            var rule = RuleSystem.Instance.GetRule("DontAskHelpFromDog");
+            var rule = RuleSystem.Instance.GetRule("AskHelpFromDog");
             rule.OnRuleViolated(gameObject);
             return true;
         }
@@ -51,7 +51,7 @@ public class Dog : Interact
             return true;
         }
         hasHelpedThisRound = true;
-        RuleSystem.Instance.SetPending("DontAskHelpFromDog");
+        RuleSystem.Instance.SetPending("AskHelpFromDog");
         SetState(DogState.GoingToDoor);
         Debug.Log("狗狗出发去开门");
         return true;
@@ -117,7 +117,7 @@ public class Dog : Interact
         agent.enabled = false;
 
         // 没帮过忙 → 回初始位置自由活动；帮过忙 → 拴住
-        if (RuleSystem.Instance.IsRuleActive("DontAskHelpFromDog") && leashedPoint != null)
+        if (RuleSystem.Instance.IsRuleActive("AskHelpFromDog") && leashedPoint != null)
         {
             transform.position = leashedPoint.position;
             transform.rotation = leashedPoint.rotation;

@@ -17,6 +17,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
     [Header("跳跃参数")]
     private bool isjump = false;
+    public bool IsGround => isGrounded;
     [SerializeField] private float jumpHeight = 2f;
 
     [Header("视角拖动")]
@@ -66,7 +67,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         CheckGround();
 
         Move();
-
+        ApplyFallAcceleration();
         // 保持角色直立
         Vector3 euler = transform.eulerAngles;
         transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
@@ -81,13 +82,13 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         if (isRushing && isGrounded)
             currentSpeed *= sprintMultiplier;
-        // �? 只取摄像机Y轴角�?
+        // 只取摄像机Y轴角
         float y = cameraRoot.eulerAngles.y;
 
-        // �? 用角度构造一个“水平旋转�?
+        // 用角度构造一个“水平旋转�?
         Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
 
-        // �? 得到方向（完全水平）
+        // 得到方向（完全水平）
         Vector3 forward = yawRotation * Vector3.forward;
         Vector3 right = yawRotation * Vector3.right;
 
@@ -119,6 +120,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private void HandleJump()
     {
         if (!isGrounded) return;
+        isjump = true;
 
         //transform.position += Vector3.up * 10;
         Vector3 v = rb.velocity;
@@ -245,6 +247,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
             Vector3.down,
             0.65f
         );
+
+        if (isGrounded)
+        {
+            isjump = false; //落地结束跳跃
+        }
     }
 
     private bool IsHittingWall(Vector3 dir)
@@ -300,6 +307,19 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         else if (ctx.canceled)
         {
             GameManager.Instance.RequestShowRules(false);
+        }
+    }
+
+    private void ApplyFallAcceleration()
+    {
+        if (rb.velocity.y < 0)
+        {
+            Vector3 v = rb.velocity;
+
+            // 只增强下落速度（不影响上升）
+            v += Vector3.up * Physics.gravity.y * 1.2f * Time.fixedDeltaTime;
+
+            rb.velocity = v;
         }
     }
 }

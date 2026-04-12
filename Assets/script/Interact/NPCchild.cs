@@ -18,10 +18,14 @@ public class NPCchild : Interact
     [SerializeField] private float doorReachDistance = 1f;
 
     [Header("Idle游走")]
-    [SerializeField] private float wanderRadius = 5f;     // 游走半径
-    [SerializeField] private float wanderInterval = 4f;   // 每隔多久换目标
+    [SerializeField] private float wanderRadius = 4f;     // 游走半径
+    [SerializeField] private float wanderInterval = 3f;   // 每隔多久换目标
     private float wanderTimer;
     private Vector3 startPoint; // 初始中心点
+    [SerializeField] private float idleWaitTime = 0.5f;
+    private bool isWaiting;
+    private bool isWaitingAtPoint;
+    private float waitTimer;
 
     [Header("完成后位置")]
     [SerializeField] private Transform finishPoint;
@@ -58,22 +62,34 @@ public class NPCchild : Interact
             return true;
         }
 
-        // 关键：只有 axe 才触发
+        // 关键：只有 axe/apple 才触发
         if (item != null && item.GetComponent<axe>() != null)
         {
             Debug.Log("NPC接收到斧头，准备去开门");
 
             hasHelped = true;
 
-            TriggerRuleSystem("DontAskNPCForHelp");
-            if (RuleSystem.Instance.IsRuleActive("DontAskNPCForHelp"))
+            TriggerRuleSystem("AskNPCForHelp");
+            if (RuleSystem.Instance.IsRuleActive("AskNPCForHelp"))
+                return true;
+
+            SetState(NPCState.GoingToDoor);
+        }
+        else if (item != null && item.GetComponent<apple>() != null)
+        {
+            Debug.Log("NPC接收到苹果，准备去开门");
+
+            hasHelped = true;
+
+            TriggerRuleSystem("AskNPCForHelp2");
+            if (RuleSystem.Instance.IsRuleActive("AskNPCForHelp2"))
                 return true;
 
             SetState(NPCState.GoingToDoor);
         }
         else
         {
-            Debug.Log("NPC不理你：没有斧头");
+            Debug.Log("NPC不理你：没有斧头也没有苹果");
             return false;
         }
         return false;
@@ -96,7 +112,9 @@ public class NPCchild : Interact
                     Debug.Log("NPC帮忙开门");
                 }
 
-                SetState(NPCState.Done);
+                //重新切换为随机游走idle
+                agent.SetDestination(startPoint);
+                SetState(NPCState.Idle);
             }
         }
 
@@ -118,16 +136,22 @@ public class NPCchild : Interact
     private void SetState(NPCState newState)
     {
         currentState = newState;
+        isWaitingAtPoint = false;
+        waitTimer = 0f;
+        wanderTimer = 0f;
+        agent.ResetPath();
 
         switch (newState)
         {
             case NPCState.Idle:
                 agent.enabled = true;
+                agent.speed = 2.5f;
                 wanderTimer = wanderInterval; // 立刻选点
                 break;
 
             case NPCState.GoingToDoor:
                 agent.enabled = true;
+                agent.speed = 4f;
 
                 if (doorApproachPoint != null)
                     agent.SetDestination(doorApproachPoint.position);
@@ -141,7 +165,7 @@ public class NPCchild : Interact
 
                 if (finishPoint != null)
                 {
-                    transform.position = finishPoint.position;
+                    transform.position = new Vector3(finishPoint.position.x,transform.position.y,finishPoint.position.z);
                     transform.rotation = finishPoint.rotation;
                 }
                 break;
@@ -163,6 +187,24 @@ public class NPCchild : Interact
         if (!agent.enabled)
             agent.enabled = true;
 
+        if (isWaitingAtPoint)
+        {
+            waitTimer += Time.deltaTime;
+
+            if (waitTimer >= idleWaitTime)
+            {
+                isWaitingAtPoint = false;
+                waitTimer = 0f;
+
+                // 重新找下一个点
+                Vector3 randomPos = GetRandomNavMeshPoint(startPoint, wanderRadius);
+                agent.SetDestination(randomPos);
+            }
+
+            return;
+        }
+
+        // ❗ 正在移动
         wanderTimer += Time.deltaTime;
 
         if (wanderTimer >= wanderInterval)
@@ -172,6 +214,15 @@ public class NPCchild : Interact
             agent.SetDestination(randomPos);
 
             wanderTimer = 0f;
+        }
+
+        // ❗ 到达点 → 进入等待
+        if (!agent.pathPending && agent.remainingDistance <= 0.2f)
+        {
+            isWaitingAtPoint = true;
+            waitTimer = 0f;
+
+            agent.ResetPath(); // 停住
         }
     }
     private Vector3 GetRandomNavMeshPoint(Vector3 center, float radius)
@@ -189,5 +240,10 @@ public class NPCchild : Interact
 
         // fallback（找不到就原地）
         return center;
+    }
+
+    public void NPChead()
+    {
+        TriggerRuleSystem("NPChead");
     }
 }
