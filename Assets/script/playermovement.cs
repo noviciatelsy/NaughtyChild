@@ -401,33 +401,39 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     private void OpenBoard()
     {
         if (isBoardOpen) return;
-        isBoardOpen = true;
-
-        // 先移除 GameMode 回调，防止 Disable 时触发 canceled
-        inputActions.GameMode.RemoveCallbacks(this);
-        inputActions.GameMode.Disable();
-
-        // 清除残留输入
-        moveInput = Vector2.zero;
-
-        inputActions.UIMode.AddCallbacks(this);
-        inputActions.UIMode.Enable();
-
+        SetBoardInputState(true);
         GameManager.Instance.RequestShowRules(true);
     }
 
     private void CloseBoard()
     {
         if (!isBoardOpen) return;
-        isBoardOpen = false;
-
-        inputActions.UIMode.RemoveCallbacks(this);
-        inputActions.UIMode.Disable();
-
-        inputActions.GameMode.AddCallbacks(this);
-        inputActions.GameMode.Enable();
-
+        SetBoardInputState(false);
         GameManager.Instance.RequestShowRules(false);
+    }
+
+    /// <summary>
+    /// 切换规则板的输入状态（GameMode ↔ UIMode），不触发规则板的显示/隐藏。
+    /// 供 Settings 暂停菜单调用，同步输入状态。
+    /// </summary>
+    public void SetBoardInputState(bool open)
+    {
+        isBoardOpen = open;
+        if (open)
+        {
+            inputActions.GameMode.RemoveCallbacks(this);
+            inputActions.GameMode.Disable();
+            moveInput = Vector2.zero;
+            inputActions.UIMode.AddCallbacks(this);
+            inputActions.UIMode.Enable();
+        }
+        else
+        {
+            inputActions.UIMode.RemoveCallbacks(this);
+            inputActions.UIMode.Disable();
+            inputActions.GameMode.AddCallbacks(this);
+            inputActions.GameMode.Enable();
+        }
     }
 
     private void ApplyFallAcceleration()

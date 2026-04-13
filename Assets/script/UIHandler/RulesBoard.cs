@@ -13,8 +13,8 @@ public class RulesBoard : MonoBehaviour
     [SerializeField] private RectTransform ort;
     [SerializeField] private RectTransform drt;
     [Header("背景图切换")]
-    [SerializeField] private Image rulesBg;
-    [SerializeField] private Image achievementsBg;
+    [SerializeField] private Sprite rulesBg;
+    [SerializeField] private Sprite achievementsBg;
     private Image boardImage;
     private float oTp = 0.95f;
     private float dtp = 1f;
@@ -78,14 +78,14 @@ public class RulesBoard : MonoBehaviour
                 foreach (var obj in achievementInstances) obj.SetActive(false);
                 foreach (var obj in ruleInstances) obj.SetActive(true);
                 showingAchievements = false;
-                if (rulesBg != null) boardImage = rulesBg;
+                if (rulesBg != null) boardImage.sprite = rulesBg;
             }
             else
             {
                 foreach (var obj in ruleInstances) obj.SetActive(false);
                 foreach (var obj in achievementInstances) obj.SetActive(true);
                 showingAchievements = true;
-                if (achievementsBg != null) boardImage = achievementsBg;
+                if (achievementsBg != null) boardImage.sprite = achievementsBg;
             }
         });
         seq.Append(contentCanvasGroup.DOFade(1f, 0.2f).SetEase(Ease.OutCubic));
@@ -133,7 +133,7 @@ public class RulesBoard : MonoBehaviour
                 foreach (var obj in achievementInstances) obj.SetActive(false);
                 foreach (var obj in ruleInstances) obj.SetActive(true);
                 showingAchievements = false;
-                if (rulesBg != null) boardImage = rulesBg;
+                if (rulesBg != null) boardImage.sprite = rulesBg;
             }
             isSwitching = false;
             contentCanvasGroup.alpha = 1f;

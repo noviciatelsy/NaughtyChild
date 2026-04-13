@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public event Action OnSwitchBoardRequested;
 
     public int RoundToEnd = 10; //通关多少次可以游戏结束
+    public string EndingSceneName = "Ending";
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
 
@@ -72,14 +74,14 @@ public class GameManager : MonoBehaviour
 
 
         //判断是否结束游戏
-        if(CurrentRound < RoundToEnd) 
+        if (CurrentRound < RoundToEnd)
         {
             //todo:新的一轮动画,etc...
             StartRound();
         }
         else
         {
-            //todo:结束游戏
+            TransitionToEnding();
         }
     }
 
@@ -124,6 +126,20 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         SetState(GameState.GameOver);
+    }
+    [ContextMenu("测试结算结束")]
+    private void TransitionToEnding()
+    {
+        SetState(GameState.GameOver);
+        if (SceneTransition.Instance != null)
+        {
+            SceneTransition.Instance.TransitionToScene(EndingSceneName);
+        }
+        else
+        {
+            // 没有转场组件时直接切换
+            SceneManager.LoadScene(EndingSceneName);
+        }
     }
 
     private void SetState(GameState newState)
