@@ -36,7 +36,7 @@ public class fence : Interact
         rend.enabled = false;
 
         SpawnWoods();
-
+        SoundManager.Instance.PlaySFX("Ä¾Í·ÆÆ»µ3");
         Debug.Log("Î§À¸±»ÆÆ»µ£¨µôÂäÄ¾°å£©");
     }
 

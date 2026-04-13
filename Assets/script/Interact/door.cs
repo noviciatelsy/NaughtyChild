@@ -123,7 +123,7 @@ public class door : Interact
         rend.enabled = false;
 
         SpawnWoods();
-
+        SoundManager.Instance.PlaySFX("Ä¾Í·ÆÆ»µ1");
         Debug.Log("Î§À¸±»ÆÆ»µ£¨µôÂäÄ¾°å£©");
     }
 

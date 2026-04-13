@@ -89,7 +89,7 @@ public class Box2 : Interact
         }
 
         SpawnWoods();
-
+        SoundManager.Instance.PlaySFX("Ä¾Í·ÆÆ»µ2");
         Debug.Log("´¢ÎïÏä±»ÆÆ»µ£¨µôÂäÄ¾°å£©");
     }
 

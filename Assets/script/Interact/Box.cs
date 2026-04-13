@@ -47,7 +47,7 @@ public class Box : Interact
         }
 
         SpawnWoods();
-
+        SoundManager.Instance.PlaySFX("木头破坏2");
         Debug.Log("箱子被破坏（掉落木板）");
     }
 
