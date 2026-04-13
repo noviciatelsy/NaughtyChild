@@ -297,7 +297,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
         float mouseX = Mouse.current.delta.ReadValue().x;
 
-        float angle = mouseX * dragSensitivity;
+        float angle = -mouseX * dragSensitivity;
         Vector3 euler = cameraRoot.eulerAngles;
         euler.y -= angle;
         cameraRoot.eulerAngles = euler;

@@ -13,6 +13,7 @@ public class RulesBoard : MonoBehaviour
     [SerializeField] private RectTransform drt; 
     private RectTransform selfRect;
     private int ruleCount = 1;
+
     void Start()
     {
         Panel.gameObject.SetActive(false);
