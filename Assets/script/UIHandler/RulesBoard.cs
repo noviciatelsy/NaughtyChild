@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class RulesBoard : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class RulesBoard : MonoBehaviour
     [Header("背景图切换")]
     [SerializeField] private Sprite rulesBg;
     [SerializeField] private Sprite achievementsBg;
+    [Header("违规高亮")]
+    [SerializeField] private Color violationColor = Color.red;
+    [SerializeField] private ScrollRect scrollRect;
+    [Header("Cookie计数")]
+    [SerializeField] private TextMeshProUGUI cookieCountText;
+    [SerializeField] private RectTransform cookieIcon;
     private Image boardImage;
     private float oTp = 0.95f;
     private float dtp = 1f;
@@ -23,6 +30,9 @@ public class RulesBoard : MonoBehaviour
     private bool showingAchievements = false;
     private List<GameObject> ruleInstances = new List<GameObject>();
     private List<GameObject> achievementInstances = new List<GameObject>();
+    private Dictionary<Rule, GameObject> ruleInstanceMap = new Dictionary<Rule, GameObject>();
+    private TextMeshProUGUI highlightedText;
+    private Color originalTextColor;
     private CanvasGroup contentCanvasGroup;
     private bool isSwitching = false;
 
@@ -35,16 +45,24 @@ public class RulesBoard : MonoBehaviour
         GameManager.Instance.OnRuleCommitted += (r) => { AddRuleData(r); };
         GameManager.Instance.OnShowRulesRequested += (show) => { HandleToggle(show); };
         GameManager.Instance.OnSwitchBoardRequested += SwitchContent;
+        GameManager.Instance.OnRuleViolated += OnRuleViolated;
+        GameManager.Instance.OnCookieCollected += OnCookieCollected;
         selfRect.anchoredPosition = new Vector2(ort.anchoredPosition.x, selfRect.anchoredPosition.y);
 
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.OnAchievementUnlocked += OnAchievementUnlocked;
+
+        SetCookieText(0);
     }
 
     private void OnDestroy()
     {
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.OnSwitchBoardRequested -= SwitchContent;
+            GameManager.Instance.OnRuleViolated -= OnRuleViolated;
+            GameManager.Instance.OnCookieCollected -= OnCookieCollected;
+        }
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.OnAchievementUnlocked -= OnAchievementUnlocked;
     }
@@ -96,12 +114,120 @@ public class RulesBoard : MonoBehaviour
     private void AddRuleData(Rule rule)
     {
         var instance = Instantiate(rulePrefab, content, false);
-        var text = instance.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        var text = instance.GetComponentInChildren<TextMeshProUGUI>();
         if (text != null)
         {
             text.text = $" {ruleCount++}. {rule.description}";
         }
         ruleInstances.Add(instance);
+        ruleInstanceMap[rule] = instance;
+    }
+
+    private void OnRuleViolated(Rule rule)
+    {
+        if (showingAchievements)
+        {
+            foreach (var obj in achievementInstances) obj.SetActive(false);
+            foreach (var obj in ruleInstances) obj.SetActive(true);
+            showingAchievements = false;
+            if (rulesBg != null) boardImage.sprite = rulesBg;
+        }
+
+        ClearHighlight();
+        if (ruleInstanceMap.TryGetValue(rule, out var ruleObj))
+        {
+            var text = ruleObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (text != null)
+            {
+                highlightedText = text;
+                originalTextColor = highlightedText.color;
+                highlightedText.color = violationColor;
+                highlightedText.DOKill();
+                highlightedText.DOFade(0.3f, 0.3f)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetUpdate(true);
+            }
+            ScrollToItem(ruleObj.GetComponent<RectTransform>());
+        }
+    }
+
+    private void OnCookieCollected(int count)
+    {
+        SetCookieText(count);
+        if (cookieCountText != null)
+        {
+            // 弹跳动画
+            cookieCountText.transform.DOKill();
+            cookieCountText.transform.localScale = Vector3.one;
+            cookieCountText.transform.DOPunchScale(Vector3.one * 0.5f, 0.4f, 6, 0.7f);
+        }
+        if (cookieIcon != null)
+        {
+            cookieIcon.DOKill();
+            cookieIcon.localScale = Vector3.one;
+            cookieIcon.DOPunchScale(Vector3.one * 0.3f, 0.4f, 6, 0.7f);
+        }
+    }
+
+    private void SetCookieText(int count)
+    {
+        if (cookieCountText != null)
+            cookieCountText.text = $"：{count}";
+    }
+
+    private void ClearHighlight()
+    {
+        if (highlightedText != null)
+        {
+            highlightedText.DOKill();
+            highlightedText.color = originalTextColor;
+            highlightedText.alpha = 1f;
+            highlightedText = null;
+        }
+    }
+
+    /// <summary>
+    /// 自动滚动ScrollView让目标item可见（居中偏上）
+    /// </summary>
+    private void ScrollToItem(RectTransform target)
+    {
+        if (scrollRect == null || target == null) return;
+
+        // 等一帧让布局刷新
+        StartCoroutine(ScrollToItemCoroutine(target));
+    }
+
+    private IEnumerator ScrollToItemCoroutine(RectTransform target)
+    {
+        yield return null; // 等Canvas重建布局
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform viewport = scrollRect.viewport ?? scrollRect.GetComponent<RectTransform>();
+        float contentHeight = content.rect.height;
+        float viewportHeight = viewport.rect.height;
+
+        if (contentHeight <= viewportHeight)
+            yield break; // 内容不超出视口，无需滚动
+
+        // 计算目标在content中的局部y位置（从顶部算起的偏移）
+        float targetY = -target.anchoredPosition.y;
+        float targetHalfH = target.rect.height * 0.5f;
+
+        // 期望让目标出现在视口中心
+        float desiredScrollY = targetY - viewportHeight * 0.5f + targetHalfH;
+
+        // clamp到合法范围
+        float maxScroll = contentHeight - viewportHeight;
+        desiredScrollY = Mathf.Clamp(desiredScrollY, 0f, maxScroll);
+
+        // normalizedPosition: 1=顶部, 0=底部
+        float normalizedY = 1f - (desiredScrollY / maxScroll);
+
+        DOTween.To(() => scrollRect.verticalNormalizedPosition,
+            v => scrollRect.verticalNormalizedPosition = v,
+            normalizedY, 0.4f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
     }
 
     private void HandleToggle(bool show)
@@ -138,6 +264,7 @@ public class RulesBoard : MonoBehaviour
             isSwitching = false;
             contentCanvasGroup.alpha = 1f;
             content.localScale = Vector3.one;
+            ClearHighlight();
 
             Panel.DOFade(0f, 0.3f)
                 .SetEase(Ease.InCubic)

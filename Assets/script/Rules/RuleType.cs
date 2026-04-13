@@ -14,7 +14,7 @@ public class Rule : ScriptableObject
     public void OnRuleViolated(GameObject violator)
     {
         Debug.Log($"规则 [{name}] 被 {violator.name} 违反!");
-        GameManager.Instance.RestartRound();
+        GameManager.Instance.HandleRuleViolation(this);
     }
 }
 

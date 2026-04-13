@@ -24,11 +24,14 @@ public class GameManager : MonoBehaviour
     public event Action OnGameRestarted;
     public event Action<bool> OnShowRulesRequested;
     public event Action OnSwitchBoardRequested;
+    public event Action<Rule> OnRuleViolated;
+    public event Action<int> OnCookieCollected;
 
     public int RulesToEnd = 1; //累计触发多少条规则可以游戏结束
     public string EndingSceneName = "Ending";
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
+    public int CookieCount { get; private set; }
 
     void Awake()
     {
@@ -63,6 +66,9 @@ public class GameManager : MonoBehaviour
 
         SetState(GameState.RoundComplete);
 
+        CookieCount++;
+        OnCookieCollected?.Invoke(CookieCount);
+
         Rule committed = RuleSystem.Instance.CommitRound();
         OnRoundCompleted?.Invoke(CurrentRound);
         if (committed != null)
@@ -85,6 +91,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public float violationDisplayDuration = 2f;
+
+    /// <summary>
+    /// 违反规则时调用：暂停游戏、展示规则板并高亮被违反的规则，延迟后重开
+    /// </summary>
+    public void HandleRuleViolation(Rule violatedRule)
+    {
+        if (CurrentState != GameState.Playing) return;
+        SetState(GameState.Paused);
+        Time.timeScale = 0f;
+        OnRuleViolated?.Invoke(violatedRule);
+        RequestShowRules(true);
+        StartCoroutine(ViolationRestartCoroutine());
+    }
+
+    private IEnumerator ViolationRestartCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(violationDisplayDuration);
+        Time.timeScale = 1f;
+        RequestShowRules(false);
+        RestartRound();
+    }
+
     //重开当前轮不结算规则
     public void RestartRound()
     {
@@ -98,6 +127,7 @@ public class GameManager : MonoBehaviour
     {
         RuleSystem.Instance.ClearAllRules();
         CurrentRound = 0;
+        CookieCount = 0;
         OnGameRestarted?.Invoke();
         StartRound();
     }

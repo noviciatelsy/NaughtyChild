@@ -32,10 +32,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3487387978096271347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 497.2625, y: 732.9953}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1412895908116761541
 MonoBehaviour:
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9568628, g: 0.94117653, b: 0.92549026, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -555,7 +555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &472456228647826423
 RectTransform:
   m_ObjectHideFlags: 0
@@ -636,3 +636,7 @@ MonoBehaviour:
   drt: {fileID: 0}
   rulesBg: {fileID: -105936255, guid: fae25ab27ab589148b436c8db9e7340e, type: 3}
   achievementsBg: {fileID: 1026599843, guid: 716e57626bb8a7643a82f48136bc95e5, type: 3}
+  violationColor: {r: 1, g: 0, b: 0, a: 1}
+  scrollRect: {fileID: 2935809657589112265}
+  cookieCountText: {fileID: 0}
+  cookieIcon: {fileID: 0}
