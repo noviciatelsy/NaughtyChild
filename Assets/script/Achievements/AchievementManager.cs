@@ -40,6 +40,7 @@ public class AchievementManager : MonoBehaviour
         Debug.Log($"[AchievementManager] 成就解锁事件触发: {achievement.achievementName}");
         OnAchievementUnlocked?.Invoke(achievement);
     }
+
     public T GetAchievement<T>(string name) where T : AchievementSO
     {
         foreach (var ach in allAchievements)
@@ -78,5 +79,15 @@ public class AchievementManager : MonoBehaviour
         if (floatAch != null) { floatAch.AddProgress(amount); return; }
 
         Debug.LogWarning($"[AchievementManager] 未找到成就: {actionName}");
+    }
+
+    [ContextMenu("测试解锁第一个成就")]
+    private void TestUnlockFirst()
+    {
+        if (allAchievements.Count > 0)
+        {
+            HandleUnlocked(allAchievements[0]);
+            Debug.Log($"[测试] 模拟解锁: {allAchievements[0].achievementName}");
+        }
     }
 }

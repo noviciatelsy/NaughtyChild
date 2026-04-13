@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public event Action<bool> OnShowRulesRequested;
     public event Action OnSwitchBoardRequested;
 
-    public int RoundToEnd = 10; //通关多少次可以游戏结束
+    public int RulesToEnd = 15; //累计触发多少条规则可以游戏结束
     public string EndingSceneName = "Ending";
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
@@ -73,15 +73,15 @@ public class GameManager : MonoBehaviour
             : $"第 {CurrentRound} 轮结束，无新增规则");
 
 
-        //判断是否结束游戏
-        if (CurrentRound < RoundToEnd)
+        //判断是否结束游戏：累计生效规则数 >= RulesToEnd
+        if (RuleSystem.Instance.GetActiveRules().Count >= RulesToEnd)
         {
-            //todo:新的一轮动画,etc...
-            StartRound();
+            TransitionToEnding();
         }
         else
         {
-            TransitionToEnding();
+            //todo:新的一轮动画,etc...
+            StartRound();
         }
     }
 
