@@ -56,6 +56,9 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     public bool IsDriving => currentState == PlayerState.Driving;
     [SerializeField] private float fallDeathY = -20f;
     private bool hasTriggeredFallRestart;
+    [Header("成就配置")]
+    [SerializeField] public AchievementSO achievement;
+
     private void Awake()
     {
         inputActions = new PlayerInput();
@@ -649,6 +652,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
             hasTriggeredFallRestart = true;
 
             Debug.Log("玩家掉出地图，重开回合");
+            if (achievement != null && AchievementManager.Instance != null)
+            {
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
 
             if (GameManager.Instance != null)
             {

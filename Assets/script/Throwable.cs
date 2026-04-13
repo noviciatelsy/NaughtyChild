@@ -127,7 +127,6 @@ public class Throwable : MonoBehaviour
     {
         if (!GetMouseHitPoint(out Vector3 targetPos1))
             return;
-        Debug.Log("?");
         lr.enabled = true;
         lr.positionCount = resolution;
 

@@ -69,14 +69,29 @@ public class RulesBoard : MonoBehaviour
 
     private void OnAchievementUnlocked(AchievementSO ach)
     {
-        Debug.Log($"[RulesBoard] 收到成就解锁: {ach.achievementName}, achievementPrefab={(achievementPrefab != null ? "有" : "空")}");
+        Debug.Log($"[RulesBoard] 收到成就解锁: {ach.achievementName}");
+
         var instance = Instantiate(achievementPrefab, content, false);
+
         var item = instance.GetComponent<AchievementItem>();
         if (item != null)
             item.SetData(ach);
-        instance.SetActive(showingAchievements);
+
+        // ⭐关键修复：不要用 showingAchievements 控制“是否生成可见”
+        instance.SetActive(true);
+
         achievementInstances.Add(instance);
-        Debug.Log($"[RulesBoard] 成就实例数: {achievementInstances.Count}, 当前显示成就: {showingAchievements}");
+
+        // ⭐如果当前正在看成就页，确保它立刻可见
+        if (showingAchievements)
+        {
+            instance.transform.SetAsLastSibling();
+        }
+        // 如果当前不在成就页，自动切一次（只触发一次体验提升）
+        if (!showingAchievements)
+        {
+            SwitchContent();
+        }
     }
 
     private void SwitchContent()

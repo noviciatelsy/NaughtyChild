@@ -61,6 +61,7 @@ MonoBehaviour:
   door: {fileID: 0}
   doorApproachPoint: {fileID: 0}
   doorReachDistance: 1
+  achievement: {fileID: 11400000, guid: 80ae07f238d99f84db03c8b3d527cf8f, type: 2}
   wanderRadius: 5
   wanderInterval: 3
   idleWaitTime: 0.5

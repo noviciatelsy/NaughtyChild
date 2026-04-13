@@ -8888,6 +8888,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1ff57399c06b87e49b3546f74199bce7, type: 2}
   - {fileID: 11400000, guid: 3391691e417fa164388bf72ee51c79b3, type: 2}
   - {fileID: 11400000, guid: 80ae07f238d99f84db03c8b3d527cf8f, type: 2}
+  - {fileID: 11400000, guid: b1e10afeaa2193743b9b84590a737e70, type: 2}
+  - {fileID: 11400000, guid: 2b3ff5be7ea331e41a1f00dceb37c314, type: 2}
 --- !u!1001 &1286540521
 PrefabInstance:
   m_ObjectHideFlags: 0
