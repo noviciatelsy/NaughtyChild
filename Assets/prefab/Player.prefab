@@ -182,6 +182,7 @@ GameObject:
   - component: {fileID: 3847868900530879554}
   - component: {fileID: 7142754227541913523}
   - component: {fileID: 144879329134164032}
+  - component: {fileID: 5026682159681246118}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -235,6 +236,8 @@ MonoBehaviour:
   playerCollider: {fileID: 3847868900530879554}
   carCollider: {fileID: 6109660782272040227}
   curtargetCar: {fileID: 0}
+  carTurnSpeed: 15
+  carMoveForce: 10
 --- !u!54 &8444532352195353830
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -320,6 +323,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &5026682159681246118
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165251337322534799}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 3, z: 2}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &382587686823028503
 GameObject:
   m_ObjectHideFlags: 0

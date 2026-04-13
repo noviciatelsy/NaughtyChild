@@ -184,4 +184,9 @@ public class tree : Interact
         Debug.Log("触发规则:不要碰到树！");
         TriggerRuleSystem("DontstandOntree");
     }
+
+    public void BreakByCar()
+    {
+        FallTree();
+    }
 }

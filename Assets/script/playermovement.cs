@@ -91,8 +91,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         Move();
         ApplyFallAcceleration();
         // 保持角色直立
-        Vector3 euler = transform.eulerAngles;
-        transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
+        if (currentState == PlayerState.Normal)
+        {
+            Vector3 euler = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
+        }
     }
 
     // =========================
@@ -159,36 +162,43 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
     private void Move_Car()
     {
-        float currentSpeed = moveSpeed;
+        //float currentSpeed = moveSpeed;
 
-        if (isRushing && isGrounded)
-            currentSpeed *= sprintMultiplier;
-        // 只取摄像机Y轴角
-        float y = cameraRoot.eulerAngles.y;
+        //if (isRushing && isGrounded)
+        //    currentSpeed *= sprintMultiplier;
+        //// 只取摄像机Y轴角
+        //float y = cameraRoot.eulerAngles.y;
 
-        // 用角度构造一个“水平旋转�?
-        Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
+        //// 用角度构造一个“水平旋转�?
+        //Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
 
-        // 得到方向（完全水平）
-        Vector3 forward = yawRotation * Vector3.forward;
-        Vector3 right = yawRotation * Vector3.right;
+        //// 得到方向（完全水平）
+        //Vector3 forward = yawRotation * Vector3.forward;
+        //Vector3 right = yawRotation * Vector3.right;
 
-        Vector3 inputDir =
-            forward * moveInput.y +
-            right * moveInput.x;
+        //Vector3 inputDir =
+        //    forward * moveInput.y +
+        //    right * moveInput.x;
 
-        if (inputDir.magnitude > 1f)
-            inputDir.Normalize();
-        if (!isGrounded && IsHittingWall(inputDir))
-        {
-            inputDir = Vector3.zero; //不再往墙推
-        }
+        //if (inputDir.magnitude > 1f)
+        //    inputDir.Normalize();
+        //if (!isGrounded && IsHittingWall(inputDir))
+        //{
+        //    inputDir = Vector3.zero; //不再往墙推
+        //}
 
+        UpdateCarPhysics();
+        //Vector3 v = rb.velocity;
+
+        //v.x = inputDir.x * currentSpeed;
+        //v.z = inputDir.z * currentSpeed;
+
+        //rb.velocity = v;
+
+        // 保留重力
         Vector3 v = rb.velocity;
-
-        v.x = inputDir.x * currentSpeed;
-        v.z = inputDir.z * currentSpeed;
-
+        v.x = 0;
+        v.z = 0;
         rb.velocity = v;
     }
 
@@ -480,7 +490,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         carCollider.enabled = driving;
     }
 
+    //玩家"车"状态
     public car curtargetCar;
+    [SerializeField] private float carTurnSpeed = 15f;
+    private Quaternion currentCarRot;
+    [SerializeField] private float carMoveForce = 10f;
+
     public void EnterCar(car targetCar)
     {
         curtargetCar = targetCar;
@@ -489,7 +504,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         SetDrivingVisual(true);
 
         // 同步位置
-        transform.position = targetCar.transform.position + new Vector3(0, -0.8f, 0);
+        Vector3 pos = targetCar.transform.position;
+        transform.position = pos + new Vector3(0, -0.8f, 0);
+        currentCarRot = carVisual.transform.rotation;
+        SetLayerRecursively(gameObject, LayerMask.NameToLayer("PlayerCar"));
 
         targetCar.gameObject.SetActive(false); //不要销毁
     }
@@ -501,8 +519,119 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         SetDrivingVisual(false);
 
         curtargetCar.transform.position = transform.position + new Vector3(0,1.2f,0);   
-        transform.position+=new Vector3(0,0,1.5f);
+        transform.position += new Vector3(1.5f,0,1.5f);
         curtargetCar.gameObject.SetActive(true);
         curtargetCar = null;
+        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
+    }
+
+    private void UpdateCarPhysics()
+    {
+        float dt = Time.fixedDeltaTime;
+
+        // =========================
+        // 1️ 输入方向
+        // =========================
+        float y = cameraRoot.eulerAngles.y;
+        Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
+
+        Vector3 forward = yawRotation * Vector3.forward;
+        Vector3 right = yawRotation * Vector3.right;
+
+        Vector3 inputDir =
+            forward * moveInput.y +
+            right * moveInput.x;
+
+        if (inputDir.magnitude > 1f)
+            inputDir.Normalize();
+
+        // =========================
+        // 2️ 移动
+        // =========================
+        Vector3 move = inputDir * carMoveForce * dt;
+        move.y = 0f;
+        transform.position += move;
+
+        // =========================
+        // 3️ 平滑转向（替换原本瞬间旋转）
+        // =========================
+        if (inputDir.sqrMagnitude > 0.0001f)
+        {
+            float angleY = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg;
+            Quaternion targetRot = Quaternion.Euler(0f, angleY + 90f, 0f);
+
+            // 平滑插值（关键）
+            currentCarRot = Quaternion.Slerp(
+                currentCarRot,
+                targetRot,
+                1f - Mathf.Exp(-carTurnSpeed * dt)
+            );
+
+            carVisual.transform.rotation = currentCarRot;
+            carCollider.transform.rotation = currentCarRot;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (currentState != PlayerState.Driving) return;
+
+        door d = other.GetComponentInParent<door>();
+        if (d != null)
+        {
+            d.BreakByCar(); // 
+        }
+        fence f = other.GetComponentInParent<fence>();
+        if (f != null)
+        {
+            f.BreakByCar(); // 
+        }
+        Box b = other.GetComponentInParent<Box>();
+        if (b != null)
+        {
+            b.BreakByCar(); // 
+        }
+        tree t = other.GetComponentInParent<tree>();
+        if (t != null)
+        {
+            t.BreakByCar(); // 
+        }
+    }
+
+    private void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
+    }
+
+    public void ResetPlayerState()
+    {
+        // 状态
+        currentState = PlayerState.Normal;
+
+        // 输入
+        moveInput = Vector2.zero;
+        isRushing = false;
+        isLocked = false;
+
+        // 物理
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        currentState = PlayerState.Normal;
+
+        SetDrivingVisual(false);
+
+        curtargetCar.gameObject.SetActive(true);
+        curtargetCar = null;
+
+        // 状态恢复
+        SetDrivingVisual(false);
+
+        // Layer恢复
+        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
     }
 }

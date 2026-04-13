@@ -154,6 +154,8 @@ public class GameManager : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
+            playermovement pl = player.GetComponent<playermovement>();
+            pl.ResetPlayerState();
             Rigidbody rb = player.GetComponent<Rigidbody>();
             if (rb != null)
             {
