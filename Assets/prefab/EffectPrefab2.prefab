@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1703545706163030012}
   - component: {fileID: 205064976034061823}
   m_Layer: 0
-  m_Name: EffectPrefab
+  m_Name: EffectPrefab2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fae8ef1ff2890542bb7579baabdcb7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  riseSpeed: 1
-  lifeTime: 0.5
-  startScale: 0.7
-  endScale: 1.1
+  riseSpeed: 0.8
+  lifeTime: 0.8
+  startScale: 0.8
+  endScale: 1.2
   randomOffset: {x: 0.2, y: 0.2}
 --- !u!1 &4733290756403323304
 GameObject:

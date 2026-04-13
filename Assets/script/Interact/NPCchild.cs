@@ -36,6 +36,9 @@ public class NPCchild : Interact
     private NavMeshAgent agent;
     private NPCState currentState = NPCState.Idle;
     private bool hasHelped = false;
+    [SerializeField] private FloatPopEmitter appleFx;
+    [SerializeField] private Sprite appleSprite;
+
 
     private void Awake()
     {
@@ -80,6 +83,8 @@ public class NPCchild : Interact
             Debug.Log("NPC接收到苹果，准备去开门");
 
             hasHelped = true;
+            if (appleFx != null)
+                appleFx.Play(appleSprite);
 
             TriggerRuleSystem("AskNPCForHelp2");
             if (RuleSystem.Instance.IsRuleActive("AskNPCForHelp2"))
