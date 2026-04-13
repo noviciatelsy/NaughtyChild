@@ -1,131 +1,357 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum DogState
+public enum DogActionState
 {
-    Active,
-    GoingToDoor, 
-    Leashed  
+    Idle,
+    GoingToDoor
 }
 
 public class Dog : Interact
 {
-    [Header("¹·¹·ÅäÖÃ")]
+    [Header("Config")]
     [SerializeField] private door door;
     [SerializeField] private Transform doorApproachPoint;
     [SerializeField] private float doorReachDistance = 1f;
 
-    [Header("Ë©×¡×´Ì¬")]
+    [Header("Wander")]
+    [SerializeField] private float wanderRadius = 4f;
+    [SerializeField] private float wanderInterval = 2f;
+
+    [Header("Leash")]
     [SerializeField] private Transform leashedPoint;
 
-    [Header("¹ã¸æÅÆ¾«Áé")]
-    [SerializeField] private Transform spriteTransform; // ÍÏÈë¹·µÄ¾«Áé×ÓÎïÌå
+    [Header("Visual")]
+    [SerializeField] private Transform spriteTransform;
+    [Header("Leash Visual")]
+    [SerializeField] private LineRenderer lineRenderer;
 
     private NavMeshAgent agent;
-    private DogState currentState = DogState.Active;
-    private bool hasHelpedThisRound = false;
 
+    // =========================
+    // æ ¸å¿ƒçŠ¶æ€
+    // =========================
+    private bool isLeashed;
+    private bool isSleep;
+
+    // è¡Œä¸ºçŠ¶æ€
+    private DogActionState actionState = DogActionState.Idle;
+
+    private float wanderTimer;
+    private Vector3 wanderCenter;
+
+    // ======================================================
+    // åˆå§‹åŒ–
+    // ======================================================
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.enabled = false;
-        agent.updateRotation = false; // ÌùÍ¼¾«Áé²»Ğı×ª
+
+        agent.updateRotation = false;
         agent.updateUpAxis = false;
+
+        // åˆå§‹åŒ–çº¿
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 2;
+            lineRenderer.startColor = Color.black;
+            lineRenderer.endColor = Color.black;
+            lineRenderer.enabled = false;
+        }
     }
 
-    public override bool InteractObject(GameObject item)
+    private void Start()
     {
-        if (!Interactable) return false;
-        if (RuleSystem.Instance.IsRuleActive("AskHelpFromDog"))
+        wanderCenter = transform.position;
+
+        //SyncStageFromRules();
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(WaitForGameManager());
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnRoundStarted -= OnRoundStart;
+    }
+
+    private void OnRoundStart(int _)
+    {
+        SyncStageFromRules();
+    }
+
+    // ======================================================
+    //  å›åˆåŒæ­¥ï¼ˆå”¯ä¸€çŠ¶æ€å…¥å£ï¼‰
+    // ======================================================
+    private void SyncStageFromRules()
+    {
+        bool r3 = RuleSystem.Instance.IsRuleActive("askdogforhelp3");
+        bool r2 = RuleSystem.Instance.IsRuleActive("askdogforhelp2");
+        bool r1 = RuleSystem.Instance.IsRuleActive("askdogforhelp1");
+
+        if (r3)
         {
-            var rule = RuleSystem.Instance.GetRule("AskHelpFromDog");
-            rule.OnRuleViolated(gameObject);
-            return true;
+            isLeashed = true;
+            isSleep = true;
+        }
+        else if (r2)
+        {
+            isLeashed = true;
+            isSleep = true;
+        }
+        else if (r1)
+        {
+            isLeashed = true;
+            isSleep = false;
+        }
+        else
+        {
+            isLeashed = false;
+            isSleep = false;
         }
 
-        if (hasHelpedThisRound)
+        actionState = DogActionState.Idle;
+    }
+
+    // ======================================================
+    // äº¤äº’é€»è¾‘ï¼ˆæ ¸å¿ƒï¼‰
+    // ======================================================
+    protected override bool OnInteracted(GameObject item)
+    {
+        if (!Interactable) return false;
+
+        //  æ­£åœ¨æ‰§è¡Œè¡Œä¸ºæ—¶ç¦æ­¢é‡å¤ç‚¹å‡»
+        if (actionState == DogActionState.GoingToDoor)
+            return false;
+
+        // =========================
+        // 1ï¸ ç¡çœ çŠ¶æ€ï¼ˆæœ€é«˜ä¼˜å…ˆçº§ï¼‰
+        // =========================
+        if (isSleep)
         {
-            Debug.Log("¹·¹·±¾ÂÖÒÑ¾­°ï¹ıÃ¦ÁË");
-            return true;
+            if (item != null && item.GetComponent<apple>() != null)
+            {
+                isSleep = false;
+                Debug.Log("è§£é™¤ sleep");
+                return true;
+            }
+
+            return false;
         }
-        hasHelpedThisRound = true;
-        RuleSystem.Instance.SetPending("AskHelpFromDog");
-        SetState(DogState.GoingToDoor);
-        Debug.Log("¹·¹·³ö·¢È¥¿ªÃÅ");
+
+        // =========================
+        // 2ï¸ leash çŠ¶æ€
+        // =========================
+        if (isLeashed)
+        {
+            if (item != null && item.GetComponent<axe>() != null)
+            {
+                isLeashed = false;
+                Debug.Log("è§£é™¤ leash");
+                return true;
+            }
+            return false;
+        }
+
+        // =========================
+        // 3ï¸æ­£å¸¸ç‚¹å‡» â†’ å¼€é—¨ + æ¨è§„åˆ™
+        // =========================
+        StartGoToDoor();
+        TriggerRules();
+
         return true;
     }
 
+    // ======================================================
+    //  å»å¼€é—¨
+    // ======================================================
+    private void StartGoToDoor()
+    {
+        actionState = DogActionState.GoingToDoor;
+
+        agent.speed = 4f;
+
+        if (doorApproachPoint != null)
+            agent.SetDestination(doorApproachPoint.position);
+        else if (door != null)
+            agent.SetDestination(door.transform.position);
+    }
+
+    // ======================================================
+    // Update
+    // ======================================================
     private void Update()
     {
-        if (currentState == DogState.GoingToDoor && agent.enabled && agent.isOnNavMesh)
+        FaceCamera();
+
+        if (!agent.enabled || !agent.isOnNavMesh)
+            return;
+
+        // =========================
+        // å»å¼€é—¨é€»è¾‘
+        // =========================
+        if (actionState == DogActionState.GoingToDoor)
         {
             if (!agent.pathPending && agent.remainingDistance <= doorReachDistance)
             {
                 if (door != null)
                 {
                     door.Open();
-                    Debug.Log("¹·¹·°ïÃ¦¿ªÁËÃÅ");
+                    Debug.Log("ç‹—ç‹—å¼€é—¨");
                 }
-                SetState(DogState.Leashed);
+
+                actionState = DogActionState.Idle;
             }
+
+            return; // â—é˜»æ–­å…¶ä»–è¡Œä¸º
         }
 
-        // ¾«Áé¹ã¸æÅÆ£ºÊ¼ÖÕÃæÏòÉãÏñ»ú
-        if (spriteTransform != null)
+        // =========================
+        // ğŸ˜´ ç¡çœ 
+        // =========================
+        if (isSleep)
         {
-            Camera cam = Camera.main;
-            if (cam != null)
-            {
-                Vector3 dir = cam.transform.position - spriteTransform.position;
-                dir.y = 0; // Ö»Ë®Æ½Ğı×ª
-                if (dir != Vector3.zero)
-                    spriteTransform.rotation = Quaternion.LookRotation(-dir);
-            }
+            agent.ResetPath();
+            return;
         }
+
+        // =========================
+        // ğŸš¶ wander
+        // =========================
+        if (isLeashed)
+            HandleLeashedWander();
+        else
+            HandleWander();
+
+        UpdateLeashLine();
     }
 
-    private void SetState(DogState newState)
+    // ======================================================
+    //  è§„åˆ™æ¨è¿›ï¼ˆå…³é”®ä¿®å¤ç‚¹ï¼‰
+    // ======================================================
+    private void TriggerRules()
     {
-        currentState = newState;
-
-        switch (newState)
+        // æ²¡æœ‰1 â†’ æ¨1
+        if (!RuleSystem.Instance.IsRuleActive("askdogforhelp1"))
         {
-            case DogState.Active:
-                agent.enabled = false; // ×ÔÓÉ×´Ì¬Ô­µØ´ıÃü
-                break;
-
-            case DogState.GoingToDoor:
-                agent.enabled = true;
-                if (doorApproachPoint != null)
-                    agent.SetDestination(doorApproachPoint.position);
-                else if (door != null)
-                    agent.SetDestination(door.transform.position);
-                break;
-
-            case DogState.Leashed:
-                agent.enabled = false;
-                break;
+            TriggerRuleSystem("askdogforhelp1");
+            return;
         }
-    }
 
-    public override void Reset()
-    {
-        base.Reset();
-        hasHelpedThisRound = false;
-        agent.enabled = false;
-
-        // Ã»°ï¹ıÃ¦ ¡ú »Ø³õÊ¼Î»ÖÃ×ÔÓÉ»î¶¯£»°ï¹ıÃ¦ ¡ú Ë©×¡
-        if (RuleSystem.Instance.IsRuleActive("AskHelpFromDog") && leashedPoint != null)
+        // æœ‰1 â†’ æ¨2
+        if (!RuleSystem.Instance.IsRuleActive("askdogforhelp2"))
         {
-            transform.position = leashedPoint.position;
-            transform.rotation = leashedPoint.rotation;
-            SetState(DogState.Leashed);
+            TriggerRuleSystem("askdogforhelp2");
+            return;
+        }
+
+        // æœ‰2 â†’ æ¨3
+        if (!RuleSystem.Instance.IsRuleActive("askdogforhelp3"))
+        {
+            TriggerRuleSystem("askdogforhelp3");
+            return;
         }
         else
         {
-            SetState(DogState.Active);
+            TriggerRuleSystem("askdogforhelp3");
+        }
+    }
+
+    // ======================================================
+    //  wanderï¼ˆè‡ªç”±ï¼‰
+    // ======================================================
+    private void HandleWander()
+    {
+        wanderTimer += Time.deltaTime;
+        if (wanderTimer < wanderInterval) return;
+
+        wanderTimer = 0f;
+        agent.speed = 2.5f;
+
+        agent.SetDestination(RandomPoint(wanderCenter, wanderRadius));
+    }
+
+    // ======================================================
+    // ğŸ”—leash wanderï¼ˆé™åˆ¶èŒƒå›´ï¼‰
+    // ======================================================
+    private void HandleLeashedWander()
+    {
+        wanderTimer += Time.deltaTime;
+        if (wanderTimer < wanderInterval) return;
+
+        wanderTimer = 0f;
+        agent.speed = 2f;
+
+        Vector3 center = leashedPoint != null ? leashedPoint.position : transform.position;
+        Vector2 r = Random.insideUnitCircle * 2f;
+
+        Vector3 target = new Vector3(center.x + r.x, transform.position.y, center.z + r.y);
+
+        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            agent.SetDestination(hit.position);
+        else
+            agent.SetDestination(center);
+    }
+
+    // ======================================================
+    //  éšæœºç‚¹
+    // ======================================================
+    private Vector3 RandomPoint(Vector3 center, float radius)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 p = center + Random.insideUnitSphere * radius;
+
+            if (NavMesh.SamplePosition(p, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                return hit.position;
+        }
+
+        return center;
+    }
+
+    // ======================================================
+    //  æœå‘æ‘„åƒæœºï¼ˆ2Dæœå‘ï¼‰
+    // ======================================================
+    private void FaceCamera()
+    {
+        if (spriteTransform == null) return;
+
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 dir = cam.transform.position - spriteTransform.position;
+        dir.y = 0;
+
+        if (dir != Vector3.zero)
+            spriteTransform.rotation = Quaternion.LookRotation(-dir);
+    }
+
+    private IEnumerator WaitForGameManager()
+    {
+        // ç­‰ GameManager åˆå§‹åŒ–
+        yield return new WaitUntil(() => GameManager.Instance != null);
+
+        GameManager.Instance.OnRoundStarted += OnRoundStart;
+    }
+
+    private void UpdateLeashLine()
+    {
+        if (lineRenderer == null) return;
+
+        if (isLeashed && leashedPoint != null)
+        {
+            lineRenderer.enabled = true;
+
+            lineRenderer.SetPosition(0, leashedPoint.position);
+            lineRenderer.SetPosition(1, transform.position);
+        }
+        else
+        {
+            lineRenderer.enabled = false;
         }
     }
 }

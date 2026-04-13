@@ -8479,6 +8479,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1630275878}
   - {fileID: 4899004644281814756}
   - {fileID: 1196311030}
   - {fileID: 2086558970}
@@ -8832,7 +8833,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allRules:
-  - {fileID: 11400000, guid: 681dd68e945301545a942fe9e39b256d, type: 2}
   - {fileID: 11400000, guid: 79d784d5a0bee854f8bf5a180a9d957b, type: 2}
   - {fileID: 11400000, guid: 9f6de85f39dbea040b6d02319ee3b8fd, type: 2}
   - {fileID: 11400000, guid: 2338252831cd5e7499a5dbd53235003c, type: 2}
@@ -8851,6 +8851,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3840341e121ba07458a0495a41b925ca, type: 2}
   - {fileID: 11400000, guid: e9a43f2df7747f14eb22a6d1ffd340f0, type: 2}
   - {fileID: 11400000, guid: bd783bf7610797941a7cb5431a29895c, type: 2}
+  - {fileID: 11400000, guid: 681dd68e945301545a942fe9e39b256d, type: 2}
+  - {fileID: 11400000, guid: ffef87a5aa236174db97447c0c7242f9, type: 2}
+  - {fileID: 11400000, guid: fc91d9a7969942848a80cf2fde5a138c, type: 2}
   initialRules: []
 --- !u!4 &1284021712
 Transform:
@@ -11855,6 +11858,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1627262438}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1630275877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630275878}
+  m_Layer: 0
+  m_Name: DogTree
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1630275878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630275877}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.6922152, y: -0.1443541, z: 0.1443541, w: 0.6922152}
+  m_LocalPosition: {x: 4.53, y: 0.361, z: 3.4090002}
+  m_LocalScale: {x: 0.19999997, y: 1, z: 0.19999999}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1204573686}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 23.559}
 --- !u!1001 &1661532056
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16353,7 +16387,7 @@ PrefabInstance:
     - target: {fileID: 177514248725655229, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.1
+      value: 5.041
       objectReference: {fileID: 0}
     - target: {fileID: 177514248725655229, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
@@ -16363,7 +16397,7 @@ PrefabInstance:
     - target: {fileID: 177514248725655229, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.64
+      value: 1.536
       objectReference: {fileID: 0}
     - target: {fileID: 177514248725655229, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
@@ -16414,7 +16448,7 @@ PrefabInstance:
         type: 3}
       propertyPath: leashedPoint
       value: 
-      objectReference: {fileID: 69805674479053913}
+      objectReference: {fileID: 1630275878}
     - target: {fileID: 6676652463211363620, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
       propertyPath: doorApproachPoint
