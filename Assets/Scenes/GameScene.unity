@@ -15573,6 +15573,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6376176743592424200, guid: 651fc5f7f0d1cc843a12101bf1008061,
         type: 3}
+      propertyPath: canDrive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6376176743592424200, guid: 651fc5f7f0d1cc843a12101bf1008061,
+        type: 3}
       propertyPath: squashAmount
       value: 0.85
       objectReference: {fileID: 0}

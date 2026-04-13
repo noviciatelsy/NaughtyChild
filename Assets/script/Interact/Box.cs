@@ -94,4 +94,13 @@ public class Box : Interact
 
         spawnedWoods.Clear();
     }
+
+    public void BreakByCar()
+    {
+        if (isBroken) return;
+
+        Debug.Log("车撞箱子！");
+
+        BreakBox();
+    }
 }

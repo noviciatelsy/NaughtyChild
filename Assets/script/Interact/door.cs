@@ -144,4 +144,12 @@ public class door : Interact
         }
     }
 
+    public void BreakByCar()
+    {
+        if (isBroken) return;
+
+        Debug.Log("³µ×²ÃÅ£¡");
+
+        Breakfence();
+    }
 }

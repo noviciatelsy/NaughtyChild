@@ -71,4 +71,13 @@ public class fence : Interact
 
         spawnedWoods.Clear();
     }
+
+    public void BreakByCar()
+    {
+        if (isBroken) return;
+
+        Debug.Log("³µ×²Î§À¸£¡");
+
+        Breakfence();
+    }
 }
