@@ -17,7 +17,7 @@ public class DialogueBehaviour : PlayableBehaviour
 
         if (DialogueManager.Instance != null && !string.IsNullOrEmpty(dialogueText))
         {
-            DialogueManager.Instance.SetText(dialogueText);
+            DialogueManager.Instance.SetText("快看这个手机!我好想要!");
         }
     }
 

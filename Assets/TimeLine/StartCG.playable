@@ -1077,13 +1077,13 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: -5348737637102076400}
-    m_Duration: 2.5
+    m_Duration: 3
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7095133521229285384}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 2.25
+    m_BlendOutDuration: 2.1666666666666665
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1151,7 +1151,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7095133521229285384}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.333333333333334
+    m_BlendInDuration: 1.3333333333333357
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -1176,16 +1176,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Virtual Camera
   - m_Version: 1
-    m_Start: 0.25
+    m_Start: 0.8333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -895299544996479409}
-    m_Duration: 7.416666666666668
+    m_Duration: 6.833333333333337
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7095133521229285384}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 2.25
-    m_BlendOutDuration: 1.333333333333334
+    m_BlendInDuration: 2.1666666666666665
+    m_BlendOutDuration: 1.3333333333333357
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:

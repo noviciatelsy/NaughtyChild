@@ -16352,6 +16352,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1494986153843619827, guid: a3abba04978e10d43b23a9b48893fb5c,
+        type: 3}
+      propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: "\u770B\u8FD9\u4E2A\u624B\u673A\uFF01\u6211\u597D\u60F3\u73A9\uFF01"
+      objectReference: {fileID: 0}
     - target: {fileID: 3698263149318984237, guid: a3abba04978e10d43b23a9b48893fb5c,
         type: 3}
       propertyPath: m_IsActive
