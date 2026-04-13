@@ -510,6 +510,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
     public void EnterCar(car targetCar)
     {
+        if (RuleSystem.Instance.IsRuleActive("drivecar")) return;
+
         curtargetCar = targetCar;
         currentState = PlayerState.Driving;
 
@@ -626,6 +628,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         if (curtargetCar != null)
         {
             curtargetCar.gameObject.SetActive(true);
+            //curtargetCar.Reset();
             curtargetCar = null;
         }
 
