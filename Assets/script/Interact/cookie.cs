@@ -7,7 +7,7 @@ public class Cookie : Interact
     public override bool InteractObject(GameObject item)
     {
         base.InteractObject(item);
-
+        SoundManager.Instance.PlaySFX("Ð¡º¢ÌÆÐ¦");
         var flyEffect = GetComponent<CookieFlyEffect>();
         if (flyEffect != null)
         {

@@ -118,6 +118,7 @@ public class Dog : Interact
     {
         if (appleFx != null)
             appleFx.Play(appleSprite);
+        SoundManager.Instance.PlaySFX("狗叫2");
         if (!Interactable) return false;
 
         if (actionState == DogActionState.GoingToDoor)
@@ -126,7 +127,7 @@ public class Dog : Interact
         bool handled = false;
 
         // =========================
-        // 🪓 处理 leash
+        // 处理 leash
         // =========================
         if (isLeashed && item != null && item.GetComponent<axe>() != null)
         {
@@ -239,7 +240,7 @@ public class Dog : Interact
             sleepFx.StopSleepEffect();
         }
 
-        //  leash 视觉永远更新（不受 sleep 影响）
+        //  leash 视觉永远更新（不受sleep影响）
         UpdateLeashLine();
     }
 
