@@ -96,7 +96,5 @@ public class AchievementPopup : MonoBehaviour
             .SetEase(Ease.InCubic)
             .SetUpdate(true);
         yield return slideOut.WaitForCompletion();
-
-        gameObject.SetActive(false);
     }
 }
