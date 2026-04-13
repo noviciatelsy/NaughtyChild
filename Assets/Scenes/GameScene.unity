@@ -8884,6 +8884,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allAchievements:
   - {fileID: 11400000, guid: 02aaf74a01168de479ef8e0bb0192583, type: 2}
+  - {fileID: 11400000, guid: 18a82fa99d5314d40868c8ea25a970e3, type: 2}
+  - {fileID: 11400000, guid: 1ff57399c06b87e49b3546f74199bce7, type: 2}
+  - {fileID: 11400000, guid: 3391691e417fa164388bf72ee51c79b3, type: 2}
+  - {fileID: 11400000, guid: 80ae07f238d99f84db03c8b3d527cf8f, type: 2}
 --- !u!1001 &1286540521
 PrefabInstance:
   m_ObjectHideFlags: 0

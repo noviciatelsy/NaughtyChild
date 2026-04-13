@@ -142,6 +142,7 @@ MonoBehaviour:
   sleepFx: {fileID: 3826637377989603225}
   appleFx: {fileID: 823167107563069314}
   appleSprite: {fileID: -1774906869, guid: c87ae6366c598704e8fbcea4cb9b10d2, type: 3}
+  achievement: {fileID: 11400000, guid: 18a82fa99d5314d40868c8ea25a970e3, type: 2}
 --- !u!120 &5413214013439622665
 LineRenderer:
   serializedVersion: 2

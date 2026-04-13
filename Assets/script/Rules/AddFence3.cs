@@ -6,6 +6,7 @@ public class AddFence3 : RuleTrigger
 {
     public Transform fence;
     private int curRound = 0;
+
     private void Start()
     {
         curRound = GameManager.Instance.CurrentRound;

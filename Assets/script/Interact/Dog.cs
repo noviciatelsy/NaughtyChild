@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SocialPlatforms.Impl;
 
 public enum DogActionState
 {
@@ -37,13 +38,17 @@ public class Dog : Interact
     // =========================
     private bool isLeashed;
     private bool isSleep;
+    private bool isResetting;
+    private Vector3 spawnPosition;
+    private Quaternion spawnRotation;
 
     // 行为状态
     private DogActionState actionState = DogActionState.Idle;
 
     private float wanderTimer;
     private Vector3 wanderCenter;
-
+    [Header("成就配置")]
+    [SerializeField] private AchievementSO achievement;
     // ======================================================
     // 初始化
     // ======================================================
@@ -53,7 +58,6 @@ public class Dog : Interact
 
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-
         // 初始化线
         if (lineRenderer != null)
         {
@@ -71,7 +75,8 @@ public class Dog : Interact
     private void Start()
     {
         wanderCenter = transform.position;
-
+        spawnPosition = transform.position;
+        spawnRotation = transform.rotation;
         //SyncStageFromRules();
     }
 
@@ -131,7 +136,7 @@ public class Dog : Interact
         }
 
         // =========================
-        // 🍎 处理 sleep
+        //  处理 sleep
         // =========================
         if (isSleep && item != null && item.GetComponent<apple>() != null)
         {
@@ -142,18 +147,18 @@ public class Dog : Interact
             handled = true;
         }
 
-        // 👉 如果用了道具，直接返回
+        // 如果用了道具，直接返回
         if (handled)
             return true;
 
         // =========================
-        // 🚫 状态阻断
+        // 状态阻断
         // =========================
         if (isSleep || isLeashed)
             return false;
 
         // =========================
-        // ✅ 正常行为
+        // 正常行为
         // =========================
         StartGoToDoor();
         TriggerRules();
@@ -166,6 +171,15 @@ public class Dog : Interact
     // ======================================================
     private void StartGoToDoor()
     {
+        if (RuleSystem.Instance.IsRuleActive("askdogforhelp1")
+                 && RuleSystem.Instance.IsRuleActive("askdogforhelp2"))
+        {
+            if (achievement != null && AchievementManager.Instance != null)
+            {
+                Debug.LogError("12345");
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
+        }
         actionState = DogActionState.GoingToDoor;
 
         agent.speed = 4f;
@@ -181,13 +195,14 @@ public class Dog : Interact
     // ======================================================
     private void Update()
     {
+        if (isResetting) return;
         FaceCamera();
 
         if (!agent.enabled || !agent.isOnNavMesh)
             return;
 
         // =========================
-        // 🚪 去开门逻辑
+        //  去开门逻辑
         // =========================
         if (actionState == DogActionState.GoingToDoor)
         {
@@ -202,7 +217,7 @@ public class Dog : Interact
         }
 
         // =========================
-        // 😴 sleep 只限制“移动”，不 return
+        // sleep 只限制“移动”，不 return
         // =========================
         if (isSleep)
         {
@@ -214,7 +229,7 @@ public class Dog : Interact
         else
         {
             // =========================
-            // 🚶 movement logic
+            // movement logic
             // =========================
             if (isLeashed)
                 HandleLeashedWander();
@@ -224,7 +239,7 @@ public class Dog : Interact
             sleepFx.StopSleepEffect();
         }
 
-        // ✅ leash 视觉永远更新（不受 sleep 影响）
+        //  leash 视觉永远更新（不受 sleep 影响）
         UpdateLeashLine();
     }
 
@@ -251,6 +266,11 @@ public class Dog : Interact
         if (!RuleSystem.Instance.IsRuleActive("askdogforhelp3"))
         {
             TriggerRuleSystem("askdogforhelp3");
+            if (achievement != null && AchievementManager.Instance != null)
+            {
+                Debug.LogError("12345");
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
             return;
         }
         else
@@ -274,7 +294,7 @@ public class Dog : Interact
     }
 
     // ======================================================
-    // 🔗leash wander（限制范围）
+    // leash wander（限制范围）
     // ======================================================
     private void HandleLeashedWander()
     {
@@ -351,5 +371,50 @@ public class Dog : Interact
 
         lineRenderer.SetPosition(0, leashedPoint.position);
         lineRenderer.SetPosition(1, transform.position);
+    }
+
+    public override void Reset()
+    {
+        isResetting = true;
+
+        StopAllCoroutines();
+
+        // ===== NavMeshAgent 必须彻底清干净 =====
+        if (agent != null && agent.enabled)
+        {
+            agent.ResetPath();
+            agent.velocity = Vector3.zero;
+            agent.isStopped = true;
+
+            agent.Warp(wanderCenter); //关键：强制回出生点
+        }
+
+        // ===== transform 双保险 =====
+        transform.position = spawnPosition;
+        transform.rotation = spawnRotation;
+
+        // ===== 状态清理 =====
+        isLeashed = false;
+        isSleep = false;
+        actionState = DogActionState.Idle;
+        wanderTimer = 0f;
+
+        // ===== 视觉 =====
+        if (lineRenderer != null)
+            lineRenderer.enabled = false;
+
+        sleepFx?.StopSleepEffect();
+
+        // ===== 等一帧再恢复AI =====
+        StartCoroutine(ResumeAI());
+    }
+    private IEnumerator ResumeAI()
+    {
+        yield return null; // 等1帧，让GameManager Reset先执行完
+
+        if (agent != null)
+            agent.isStopped = false;
+
+        isResetting = false;
     }
 }

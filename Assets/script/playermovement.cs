@@ -54,7 +54,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     }
     private PlayerState currentState = PlayerState.Normal;
     public bool IsDriving => currentState == PlayerState.Driving;
-
+    [SerializeField] private float fallDeathY = -20f;
+    private bool hasTriggeredFallRestart;
     private void Awake()
     {
         inputActions = new PlayerInput();
@@ -100,6 +101,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
             Vector3 euler = transform.eulerAngles;
             transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
         }
+        CheckFallOutOfWorld();
     }
 
     // =========================
@@ -606,6 +608,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
     public void ResetPlayerState()
     {
+        hasTriggeredFallRestart = false;
         currentState = PlayerState.Normal;
 
         moveInput = Vector2.zero;
@@ -635,5 +638,22 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         //  强制停止车逻辑（防Update残留）
         StopAllCoroutines();
 
+    }
+
+    private void CheckFallOutOfWorld()
+    {
+        if (hasTriggeredFallRestart) return;
+
+        if (transform.position.y < fallDeathY)
+        {
+            hasTriggeredFallRestart = true;
+
+            Debug.Log("玩家掉出地图，重开回合");
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RestartRound();
+            }
+        }
     }
 }

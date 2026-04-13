@@ -16,6 +16,8 @@ public class NPCchild : Interact
     [SerializeField] private door door;
     [SerializeField] private Transform doorApproachPoint;
     [SerializeField] private float doorReachDistance = 1f;
+    [Header("成就配置")]
+    [SerializeField] public AchievementSO achievement;
 
     [Header("Idle游走")]
     [SerializeField] private float wanderRadius = 4f;     // 游走半径
@@ -73,6 +75,12 @@ public class NPCchild : Interact
             hasHelped = true;
 
             TriggerRuleSystem("AskNPCForHelp");
+
+            if (achievement != null && AchievementManager.Instance != null)
+            {
+                Debug.Log(this.transform.position);
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
             if (RuleSystem.Instance.IsRuleActive("AskNPCForHelp"))
                 return true;
 
@@ -87,6 +95,12 @@ public class NPCchild : Interact
                 appleFx.Play(appleSprite);
 
             TriggerRuleSystem("AskNPCForHelp2");
+
+            if (achievement != null && AchievementManager.Instance != null)
+            {
+                Debug.Log(this.transform.position);
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
             if (RuleSystem.Instance.IsRuleActive("AskNPCForHelp2"))
                 return true;
 
@@ -250,5 +264,11 @@ public class NPCchild : Interact
     public void NPChead()
     {
         TriggerRuleSystem("NPChead");
+
+        if (achievement != null && AchievementManager.Instance != null)
+        {
+            Debug.Log(this.transform.position);
+            AchievementManager.Instance.RecordAction(achievement.achievementName);
+        }
     }
 }

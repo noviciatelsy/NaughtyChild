@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: YouHaveSteppedOnTheGrass
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 52e315fcf7cc34342a8a9d1ddea110df, type: 3}
-  achievementName: "\u4F60\u5DF2\u7ECF\u8E29\u8349\u576A\u4E86"
+  achievementName: "\u8E29\u5230\u4E86\u8349\u576A"
   description: "\u6211\u53BB\u4E0D\u65E9\u8BF4"
   conditions: 00

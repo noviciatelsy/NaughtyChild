@@ -13,7 +13,10 @@ public class RuleTrigger : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
 
     [Header("成就配置")]
-    [SerializeField] private AchievementSO achievement;
+    [SerializeField] public AchievementSO achievement;
+    [Header("是否只触发一次")]
+    [SerializeField] private bool oneShotAchievement = true;
+    private bool achievementTriggered = false;
 
     public string RuleName => ruleName;
 
@@ -35,8 +38,11 @@ public class RuleTrigger : MonoBehaviour
 
         if (achievement != null && AchievementManager.Instance != null)
         {
-            Debug.Log(this.transform.position);
-            AchievementManager.Instance.RecordAction(achievement.achievementName);
+            if (!oneShotAchievement || !achievementTriggered)
+            {
+                achievementTriggered = true;
+                AchievementManager.Instance.RecordAction(achievement.achievementName);
+            }
         }
     }
 }

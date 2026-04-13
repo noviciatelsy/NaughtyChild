@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccff477a7e9fd424b9026184fe0f4780, type: 3}
+  m_Name: Jessie
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1221189131, guid: 4c7399c9d8200614fb320ac7d2ab8cb2, type: 3}
+  achievementName: "\u6770\u897F?!"
+  description: "\u62FF\u8D70???"
+  conditions: 00

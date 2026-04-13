@@ -69,7 +69,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ruleName: Farjump
   playerTag: Player
+  achievement: {fileID: 11400000, guid: 1ff57399c06b87e49b3546f74199bce7, type: 2}
   fence: {fileID: 394815316921600558}
+  achievement: {fileID: 0}
 --- !u!1001 &968213611111650035
 PrefabInstance:
   m_ObjectHideFlags: 0
