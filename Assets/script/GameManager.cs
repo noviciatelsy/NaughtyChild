@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public event Action<bool> OnShowRulesRequested;
     public event Action OnSwitchBoardRequested;
 
-    public int RulesToEnd = 15; //累计触发多少条规则可以游戏结束
+    public int RulesToEnd = 1; //累计触发多少条规则可以游戏结束
     public string EndingSceneName = "Ending";
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour
     {
         SetState(GameState.GameOver);
     }
+
     [ContextMenu("测试结算结束")]
     private void TransitionToEnding()
     {
