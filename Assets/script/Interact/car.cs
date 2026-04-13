@@ -54,7 +54,7 @@ public class car : Interact
             if (item != null && item.GetComponent<axe>() != null)
             {
                 canDrive = true;
-
+                SoundManager.Instance.PlaySFX("砍车");
                 // 停车
                 rb.velocity = Vector3.zero;
                 SpawnDriver();
