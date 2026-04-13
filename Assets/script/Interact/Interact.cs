@@ -50,34 +50,24 @@ public class Interact : MonoBehaviour
 
     public virtual bool InteractObject(GameObject item)
     {
-        if (!Interactable) return false;  
+        if (!Interactable) return false;
 
         Debug.Log("与" + this.name + "交互");
 
         bool success = false;
-        if (item == null)
+
+        // 永远使用 item（不要 null 分支）
+        if (item != null)
         {
-            var throwable = GetComponent<Throwable>();
+            var throwable = item.GetComponent<Throwable>();
+
             if (throwable != null && !PlayerHand.Instance.HasItem)
             {
                 PlayerHand.Instance.PickItem(throwable);
-                Debug.Log("捡起:" + this.name);
+                Debug.Log("捡起:" + item.name);
             }
         }
 
-        //// 规则系统：让子类确定规则触发条件
-        //if (RuleSystem.Instance.IsRuleActive(ruleName))
-        //{
-        //    var rule = RuleSystem.Instance.GetRule(ruleName);
-        //    rule.OnRuleViolated(gameObject);
-        //    return;
-        //}
-        //else
-        //{
-        //    RuleSystem.Instance.SetPending(ruleName);
-        //}
-
-        // 子类逻辑决定是否成功
         success |= OnInteracted(item);
 
         if (success)

@@ -328,7 +328,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
             if (hasValidTarget)
             {
                 // 空手 + 点到 �? 正常交互
-                interact.InteractObject(gameObject);
+                interact.InteractObject(interact.gameObject);
             }
             // 空手 + 没点�? �? 什么都不做
         }
@@ -610,28 +610,35 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
     public void ResetPlayerState()
     {
-        // 状态
         currentState = PlayerState.Normal;
 
-        // 输入
         moveInput = Vector2.zero;
         isRushing = false;
         isLocked = false;
 
-        // 物理
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        currentState = PlayerState.Normal;
+        externalForceTimer = 0f;
 
+        //  先停物理
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        PlayerHand.Instance?.ResetHand();
+        // 先恢复视觉
         SetDrivingVisual(false);
 
-        curtargetCar.gameObject.SetActive(true);
-        curtargetCar = null;
+        //  安全处理车
+        if (curtargetCar != null)
+        {
+            curtargetCar.gameObject.SetActive(true);
+            curtargetCar = null;
+        }
 
-        // 状态恢复
-        SetDrivingVisual(false);
+        //  强制停止车逻辑（防Update残留）
+        StopAllCoroutines();
 
-        // Layer恢复
+        //  Layer恢复
         SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
     }
 }
