@@ -515,7 +515,6 @@ GameObject:
   - component: {fileID: 131920348852819487}
   - component: {fileID: 1506747234611166229}
   - component: {fileID: 3170942060022396730}
-  - component: {fileID: 1052254408032952925}
   - component: {fileID: 3871231940727900354}
   - component: {fileID: 1309563658529080307}
   - component: {fileID: 7686745739265768675}
@@ -537,8 +536,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3198064611737454701}
   - {fileID: 6924023415517843167}
@@ -684,21 +683,6 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &1052254408032952925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4403525447859921746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4a08c75014183b4b81389ef6f383c46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mass: 1.5
-  resolution: 150
-  timeStep: 0.02
 --- !u!114 &3871231940727900354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,6 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a08c75014183b4b81389ef6f383c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lr: {fileID: 0}
   mass: 2
   resolution: 1500
   timeStep: 0.1

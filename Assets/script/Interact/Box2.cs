@@ -10,6 +10,12 @@ public class Box2 : Interact
     [SerializeField] private int woodCount = 5;
     private List<GameObject> spawnedWoods = new List<GameObject>();
     private Renderer[] allRenderers;
+
+    [Header("Function1生成物")]
+    [SerializeField] private GameObject spawnPrefab;
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private int spawnCount = 1;
+    [SerializeField] private float randomRadius = 0.3f;
     private void Awake()
     {
         // 获取所有子物体 Renderer（包括 SpriteRenderer）
@@ -48,14 +54,30 @@ public class Box2 : Interact
     {
         Debug.Log("执行函数1：箱子被空手检查/敲击/互动");
 
-        // 示例行为（你可以改）
-        // 1. 播放动画
-        // 2. UI提示
-        // 3. 轻微抖动
+        if (spawnPrefab == null || spawnPoint == null) return;
+
+        for (int i = 0; i < spawnCount; i++)
+        {
+            Vector3 offset = Random.insideUnitSphere * randomRadius;
+            offset.y = Mathf.Abs(offset.y); // 避免往下掉太多
+
+            Vector3 pos = spawnPoint.position + offset;
+
+            GameObject obj = Instantiate(
+                spawnPrefab,
+                pos,
+                Quaternion.identity
+            );
+
+            // 可选：防止穿地
+            obj.transform.position += Vector3.up * 0.1f;
+        }
     }
 
     private void BreakBox()
     {
+        TriggerRuleSystem("breakbox2");
+        if (RuleSystem.Instance.IsRuleActive("breakbox2")) return;
         isBroken = true;
 
         // 不Destroy，而是隐藏

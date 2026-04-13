@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class Throwable : MonoBehaviour
 {
     private Rigidbody rb;
-    private LineRenderer lr;
+    public LineRenderer lr;
     [SerializeField] private float mass = 1f;
 
     private Vector3 cachedVelocity;
@@ -24,13 +24,16 @@ public class Throwable : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        lr = GetComponent<LineRenderer>(); //缺这个
+
+        lr = GetComponentInChildren<LineRenderer>(true);
         lr.enabled = false;
         SetupLineColor();
     }
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        lr = GetComponent<LineRenderer>(); //缺这个
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
@@ -55,7 +58,7 @@ public class Throwable : MonoBehaviour
     {
         handPoint = hand;
         isHeld = true;
-
+        Debug.Log("held");
         rb.isKinematic = true;
         rb.useGravity = false;
 
@@ -124,7 +127,7 @@ public class Throwable : MonoBehaviour
     {
         if (!GetMouseHitPoint(out Vector3 targetPos1))
             return;
-
+        Debug.Log("?");
         lr.enabled = true;
         lr.positionCount = resolution;
 
@@ -215,33 +218,18 @@ public class Throwable : MonoBehaviour
             new GradientColorKey[]
             {
             new GradientColorKey(Color.white, 0f),   // 起点颜色
-            new GradientColorKey(Color.cyan, 1f)     // 终点颜色
+            new GradientColorKey(Color.white, 1f)     // 终点颜色
             },
             new GradientAlphaKey[]
             {
             new GradientAlphaKey(1f, 0f),   // 起点不透明
-            new GradientAlphaKey(0f, 1f)    // 终点透明
+            new GradientAlphaKey(0f, 0.8f)    // 终点透明
             }
         );
 
         lr.colorGradient = gradient;
     }
 
-    //private IEnumerator RestoreCollision(Collider selfCol, float delay)
-    //{
-    //    yield return new WaitForSeconds(delay);
-
-    //    if (playerColliders != null)
-    //    {
-    //        foreach (var col in playerColliders)
-    //        {
-    //            if (col != null && selfCol != null)
-    //            {
-    //                Physics.IgnoreCollision(selfCol, col, false);
-    //            }
-    //        }
-    //    }
-    //}
     private IEnumerator RestoreCollision(float delay)
     {
         yield return new WaitForSeconds(delay);

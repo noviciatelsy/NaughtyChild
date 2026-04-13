@@ -30,7 +30,7 @@ public class well : Interact
             return true;
         }
 
-        if (usedThisRound || RuleSystem.Instance.IsRuleActive("DontUsewell"))
+        if (RuleSystem.Instance.IsRuleActive("DontUsewell"))
         {
             TriggerRuleSystem("DontUsewell");
             Debug.Log("规则禁止使用井");
@@ -129,7 +129,7 @@ public class well : Interact
         if (d1 == null) yield break;
 
         float t = 0f;
-        float duration = 0.2f;
+        float duration = 0.35f;
 
         while (t < duration)
         {

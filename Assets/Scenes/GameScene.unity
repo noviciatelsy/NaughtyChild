@@ -8850,6 +8850,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f81b380a8d6ea8343b65261696f9906e, type: 2}
   - {fileID: 11400000, guid: 3840341e121ba07458a0495a41b925ca, type: 2}
   - {fileID: 11400000, guid: e9a43f2df7747f14eb22a6d1ffd340f0, type: 2}
+  - {fileID: 11400000, guid: bd783bf7610797941a7cb5431a29895c, type: 2}
   initialRules: []
 --- !u!4 &1284021712
 Transform:
@@ -17282,21 +17283,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 131920348852819487, guid: 6335b3754a953ba419801f570587e441,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 131920348852819487, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 131920348852819487, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 131920348852819487, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.852
       objectReference: {fileID: 0}
@@ -17344,21 +17330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 78.533
-      objectReference: {fileID: 0}
-    - target: {fileID: 131920348852819487, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3198064611737454701, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3198064611737454701, guid: 6335b3754a953ba419801f570587e441,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4403525447859921746, guid: 6335b3754a953ba419801f570587e441,
         type: 3}
