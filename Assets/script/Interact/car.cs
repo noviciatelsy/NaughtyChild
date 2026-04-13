@@ -21,6 +21,7 @@ public class car : Interact
     [SerializeField] private float stretchAmount = 1.15f;
     [SerializeField] private float squashDuration = 0.3f;
 
+    [SerializeField] private bool canDrive = false;
     private void Awake()
     {
         if (rb == null)
@@ -36,6 +37,18 @@ public class car : Interact
         // 计算方向（A → B）
         moveDir = (pointB - transform.position).normalized;
     }
+
+    public override bool InteractObject(GameObject user)
+    {
+        if (!canDrive) return false;
+
+        playermovement pm = user.GetComponent<playermovement>();
+        if (pm == null) return false;
+
+        pm.EnterCar(this);
+        return true;
+    }
+
 
     private void FixedUpdate()
     {

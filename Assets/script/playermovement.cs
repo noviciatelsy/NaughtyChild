@@ -23,8 +23,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     [SerializeField] private float jumpHeight = 2f;
 
     [Header("视角拖动")]
-    [SerializeField] private Transform cameraRoot; // 你要旋转的物�?
-    [SerializeField] private Transform playertextureroot; // 你要旋转的物�?
+    [SerializeField] private Transform cameraRoot; // 你要旋转的物?
+    [SerializeField] private Transform playertextureroot; // 你要旋转的物?
     [SerializeField] private float dragSensitivity = 0.2f;
     private bool isDragging = false;
     private bool isGrounded;
@@ -39,10 +39,23 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     private float yRotation;
     private bool isLocked;
 
+    [SerializeField] private GameObject playerVisual;
+    [SerializeField] private GameObject carVisual;
+    [SerializeField] private Collider playerCollider;
+    [SerializeField] private Collider carCollider;
+
+    public enum PlayerState
+    {
+        Normal,
+        Driving
+    }
+    private PlayerState currentState = PlayerState.Normal;
+
     private void Awake()
     {
         inputActions = new PlayerInput();
         inputActions.GameMode.AddCallbacks(this);
+
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
 
@@ -52,6 +65,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
         rb.useGravity = true; // 关键：用Unity自带重力
         rb.isKinematic = false;
+
+        SetDrivingVisual(false);
     }
 
     private bool isBoardOpen;
@@ -81,9 +96,21 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     }
 
     // =========================
-    // 移动（完全保留你的逻辑�?
+    // 移动
     // =========================
     private void Move()
+    {
+        if (currentState == PlayerState.Normal)
+        {
+            Move_Normal();
+        }
+        else if (currentState == PlayerState.Driving)
+        {
+            Move_Car();
+        }
+    }
+
+    private void Move_Normal()
     {
         if (isLocked)
         {
@@ -114,9 +141,41 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         Vector3 inputDir =
             forward * moveInput.y +
             right * moveInput.x;
-        //Vector3 inputDir =
-        //    transform.forward * moveInput.y +
-        //    transform.right * moveInput.x;
+
+        if (inputDir.magnitude > 1f)
+            inputDir.Normalize();
+        if (!isGrounded && IsHittingWall(inputDir))
+        {
+            inputDir = Vector3.zero; //不再往墙推
+        }
+
+        Vector3 v = rb.velocity;
+
+        v.x = inputDir.x * currentSpeed;
+        v.z = inputDir.z * currentSpeed;
+
+        rb.velocity = v;
+    }
+
+    private void Move_Car()
+    {
+        float currentSpeed = moveSpeed;
+
+        if (isRushing && isGrounded)
+            currentSpeed *= sprintMultiplier;
+        // 只取摄像机Y轴角
+        float y = cameraRoot.eulerAngles.y;
+
+        // 用角度构造一个“水平旋转�?
+        Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
+
+        // 得到方向（完全水平）
+        Vector3 forward = yawRotation * Vector3.forward;
+        Vector3 right = yawRotation * Vector3.right;
+
+        Vector3 inputDir =
+            forward * moveInput.y +
+            right * moveInput.x;
 
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
@@ -159,9 +218,15 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!context.performed) return;
+
+        if (currentState == PlayerState.Driving)
         {
-            HandleJump();
+            ExitCar(); // 
+        }
+        else
+        {
+            HandleJump(); // 正常跳跃
         }
     }
 
@@ -253,7 +318,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
             if (hasValidTarget)
             {
                 // 空手 + 点到 �? 正常交互
-                interact.InteractObject(null);
+                interact.InteractObject(gameObject);
             }
             // 空手 + 没点�? �? 什么都不做
         }
@@ -398,5 +463,40 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         {
             CloseBoard();
         }
+    }
+
+    void SetDrivingVisual(bool driving)
+    {
+        playerVisual.SetActive(!driving);
+        carVisual.SetActive(driving);
+
+        playerCollider.enabled = !driving;
+        carCollider.enabled = driving;
+    }
+
+    public car curtargetCar;
+    public void EnterCar(car targetCar)
+    {
+        curtargetCar = targetCar;
+        currentState = PlayerState.Driving;
+
+        SetDrivingVisual(true);
+
+        // 同步位置
+        transform.position = targetCar.transform.position + new Vector3(0, -0.8f, 0);
+
+        targetCar.gameObject.SetActive(false); //不要销毁
+    }
+
+    public void ExitCar()
+    {
+        currentState = PlayerState.Normal;
+
+        SetDrivingVisual(false);
+
+        curtargetCar.transform.position = transform.position + new Vector3(0,1.2f,0);   
+        transform.position+=new Vector3(0,0,1.5f);
+        curtargetCar.gameObject.SetActive(true);
+        curtargetCar = null;
     }
 }
