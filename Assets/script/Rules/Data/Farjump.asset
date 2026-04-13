@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1af515502e0c5954baab71bbfe38b8a5, type: 3}
   m_Name: Farjump
   m_EditorClassIdentifier: 
-  priority: 5
+  priority: 2
   description: "\u8349\u5730\u65B0\u589E\u4E86\u6805\u680F!"

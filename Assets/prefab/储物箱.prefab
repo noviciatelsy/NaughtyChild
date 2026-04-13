@@ -382,6 +382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1234700747044136231}
   - component: {fileID: 6794198272022024850}
+  - component: {fileID: 1008665052959145491}
   m_Layer: 0
   m_Name: "\u50A8\u7269\u7BB1"
   m_TagString: Untagged
@@ -426,6 +427,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1008665052959145491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5754589312078531653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d567558523ae0478fb8259c5fae1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ruleName: 
+  interactable: 1
+  interactHint: "\u6309E\u4EA4\u4E92"
+  col: {fileID: 0}
+  rend: {fileID: 0}
+  rb: {fileID: 0}
+  woodPrefab: {fileID: 3266765633029884450, guid: 91c7a1c96c8f8d941b6c3a786daf96a0,
+    type: 3}
+  woodCount: 5
 --- !u!1 &8057777077730099103
 GameObject:
   m_ObjectHideFlags: 0

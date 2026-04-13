@@ -281,7 +281,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
             if (distance > 3f)
                 continue;
 
-            // 🎯 评分机制（核心）
+            // 评分机制（核心）
             Vector3 toTarget = (temp.transform.position - ray.origin).normalized;
             float alignment = Vector3.Dot(ray.direction, toTarget); // 越接近1越准
 

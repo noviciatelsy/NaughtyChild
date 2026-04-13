@@ -1149,6 +1149,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3526333193392293901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7444620000354204958}
+  m_Layer: 0
+  m_Name: driverPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7444620000354204958
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3526333193392293901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -4.3, z: 7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1563817226600775270}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3891894575451285800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2351,6 +2382,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7153554311267918524}
+  - {fileID: 7444620000354204958}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &1614895439959409581
@@ -2435,12 +2467,18 @@ MonoBehaviour:
   col: {fileID: 0}
   rend: {fileID: 0}
   rb: {fileID: 0}
+  DtargetPoint: {fileID: 0}
   speed: 6
   reachDistance: 0.2
-  force: 15
+  force: 9
   squashAmount: 0.85
   stretchAmount: 1.15
   squashDuration: 0.3
+  autoMove: 1
+  canDrive: 0
+  driverPrefab: {fileID: 3265595302349796191, guid: f6282d4bac2bb8043929397046fa8d1e,
+    type: 3}
+  driverSpawnPoint: {fileID: 7444620000354204958}
   rotationRecoverSpeed: 250
 --- !u!65 &3136361921451472997
 BoxCollider:

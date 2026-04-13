@@ -1,16 +1,19 @@
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Driver : MonoBehaviour
 {
-    [Header("Ä¿±êµã")]
-    [SerializeField] private Transform targetPoint;
+    [Header("ç›®æ ‡ç‚¹")]
+    [SerializeField] public Transform targetPoint;
 
-    [Header("ÒÆ¶¯×é¼ş")]
+    [Header("ç§»åŠ¨ç»„ä»¶")]
     private NavMeshAgent agent;
+    [Header("æ‰è½ç‰©")]
+    [SerializeField] private GameObject icePrefab;
 
-    [Header("Í£Ö¹¾àÀë")]
-    [SerializeField] private float stopDistance = 0.2f;
+    [Header("åœæ­¢è·ç¦»")]
+    [SerializeField] private float stopDistance = 1.0f;
 
     private bool isMoving = false;
 
@@ -19,13 +22,14 @@ public class Driver : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private void OnEnable()
+
+    private void Start()
     {
         StartMove();
+        StartCoroutine(SpawnIceAfterDelay(1f));
     }
-
     // =========================
-    // Æô¶¯Ñ°Â·
+    // å¯åŠ¨å¯»è·¯
     // =========================
     public void StartMove()
     {
@@ -34,29 +38,39 @@ public class Driver : MonoBehaviour
         isMoving = true;
         agent.isStopped = false;
         agent.SetDestination(targetPoint.position);
+        Debug.Log("moving");
     }
 
     private void Update()
     {
+        if((targetPoint.position-transform.position).magnitude < stopDistance)
+        {
+            Debug.Log("arrive");
+            Destroy(gameObject);
+        }
         if (!isMoving) return;
         if (targetPoint == null) return;
+        if (!agent.isOnNavMesh) return;
 
-        // ±ØĞëÈ·±£Â·¾¶ÓĞĞ§
-        if (agent.pathPending) { Debug.Log("noo"); return; }
-        if (!agent.hasPath) { Debug.Log("noo"); return; }
-        if (agent.pathStatus != NavMeshPathStatus.PathComplete) { return; }
+        // ç­‰è·¯å¾„è®¡ç®—å®Œæˆ
+        if (agent.pathPending) return;
 
-        float distance = agent.remainingDistance;
+        // å¦‚æœæ²¡æœ‰è·¯å¾„ï¼Œç›´æ¥é€€å‡º
+        if (!agent.hasPath) return;
 
-        if (distance <= stopDistance)
+        // æ ¸å¿ƒï¼šç”¨â€œé€Ÿåº¦ + è·ç¦»â€åˆ¤æ–­
+        float speed = agent.velocity.magnitude;
+
+        float distance = Vector3.Distance(transform.position, targetPoint.position);
+
+        if (speed < 0.05f && distance <= stopDistance)
         {
-            Debug.Log("Arrived");
             Arrive();
         }
     }
 
     // =========================
-    // µ½´ïÖÕµã
+    // åˆ°è¾¾ç»ˆç‚¹
     // =========================
     private void Arrive()
     {
@@ -65,11 +79,12 @@ public class Driver : MonoBehaviour
         agent.isStopped = true;
         agent.ResetPath();
 
+        Debug.Log("?!");
         gameObject.SetActive(false);
     }
 
     // =========================
-    // Íâ²¿ÉèÖÃÄ¿±ê
+    // å¤–éƒ¨è®¾ç½®ç›®æ ‡
     // =========================
     public void SetTarget(Transform newTarget)
     {
@@ -79,5 +94,18 @@ public class Driver : MonoBehaviour
         {
             StartMove();
         }
+    }
+
+    private IEnumerator SpawnIceAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (icePrefab == null) yield break;
+
+        Vector3 pos = transform.position;
+
+        Instantiate(icePrefab, pos, Quaternion.identity);
+
+        Debug.Log("Ice dropped!");
     }
 }

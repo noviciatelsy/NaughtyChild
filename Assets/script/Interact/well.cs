@@ -12,6 +12,12 @@ public class well : Interact
     [SerializeField] private int rockCount = 3;
     private List<GameObject> spawnedrocks = new List<GameObject>();
     private bool usedThisRound = false;
+
+    [Header("旋转物体")]
+    public Transform d1;
+    [Header("井引用（外部调用）")]
+    public well linkedWell;
+
     protected override bool OnInteracted(GameObject item)
     {
         if (isBroken) return false;
@@ -65,6 +71,11 @@ public class well : Interact
             player.transform.position = transpoint.position;
             player.transform.rotation = transpoint.rotation;
         }
+
+        if (linkedWell != null)
+        {
+            linkedWell.OnPlayerTeleported();
+        }
     }
 
     private void BreakWell()
@@ -77,7 +88,7 @@ public class well : Interact
 
         SpawnWoods();
 
-        Debug.Log("井盖被破坏（掉落木板）");
+        Debug.Log("井盖被破坏（掉落石板）");
     }
 
     private void SpawnWoods()
@@ -111,5 +122,53 @@ public class well : Interact
         }
 
         spawnedrocks.Clear();
+    }
+
+    private IEnumerator RotateD1()
+    {
+        if (d1 == null) yield break;
+
+        float t = 0f;
+        float duration = 0.2f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float k = t / duration;
+
+            float z;
+
+            // 前半段：0 → 180
+            if (k < 0.5f)
+            {
+                float kk = k / 0.5f;
+                z = Mathf.Lerp(0f, 180f, kk);
+            }
+            // 后半段：180 → 0
+            else
+            {
+                float kk = (k - 0.5f) / 0.5f;
+                z = Mathf.Lerp(180f, 0f, kk);
+            }
+
+            Vector3 euler = d1.localEulerAngles;
+            euler.z = z;
+            d1.localEulerAngles = euler;
+
+            yield return null;
+        }
+
+        // 确保归位
+        Vector3 finalRot = d1.localEulerAngles;
+        finalRot.z = 0f;
+        d1.localEulerAngles = finalRot;
+    }
+
+    public void OnPlayerTeleported()
+    {
+        // 触发旋转
+        StartCoroutine(RotateD1());
+
+        Debug.Log("井检测到玩家传送，触发效果");
     }
 }

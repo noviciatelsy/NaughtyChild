@@ -8,6 +8,7 @@ public class car : Interact
     [Header("路径点")]
     private Vector3 pointA = new Vector3(18.5f, 1.1f, -4.5f);
     private Vector3 pointB = new Vector3(-8.5f, 1.1f, -4.5f);
+    [SerializeField] private Transform DtargetPoint;
 
     [Header("移动参数")]
     [SerializeField] private float speed = 5f;
@@ -23,6 +24,12 @@ public class car : Interact
 
     [SerializeField] private bool autoMove = true;
     [SerializeField] private bool canDrive = false;
+
+    [Header("驾驶员生成")]
+    [SerializeField] private GameObject driverPrefab;
+    [SerializeField] private Transform driverSpawnPoint;
+
+    private GameObject spawnedDriver;
     private void Awake()
     {
         if (rb == null)
@@ -50,6 +57,7 @@ public class car : Interact
 
                 // 停车
                 rb.velocity = Vector3.zero;
+                SpawnDriver();
 
                 Debug.Log("车已解锁，可以驾驶！");
                 return true;
@@ -116,6 +124,12 @@ public class car : Interact
         rb.velocity = Vector3.zero;
         Debug.Log("?");
         canDrive = false;
+
+        if (spawnedDriver != null)
+        {
+            Destroy(spawnedDriver);
+            spawnedDriver = null;
+        }
     }
 
     private void ClampHeight()
@@ -210,5 +224,20 @@ public class car : Interact
         transform.position = pointA;
 
         moveDir = (pointB - pointA).normalized;
+    }
+
+    private void SpawnDriver()
+    {
+        if (driverPrefab == null || driverSpawnPoint == null) return;
+
+        if (spawnedDriver != null) return; // 防止重复生成
+
+        spawnedDriver = Instantiate(
+            driverPrefab,
+            driverSpawnPoint.position,
+            driverSpawnPoint.rotation
+        );
+        Driver dr = spawnedDriver.gameObject.GetComponent<Driver>();
+        dr.targetPoint = DtargetPoint;
     }
 }
