@@ -12,6 +12,10 @@ public class RulesBoard : MonoBehaviour
     public Image Panel;
     [SerializeField] private RectTransform ort;
     [SerializeField] private RectTransform drt;
+    [Header("背景图切换")]
+    [SerializeField] private Image rulesBg;
+    [SerializeField] private Image achievementsBg;
+    private Image boardImage;
     private float oTp = 0.95f;
     private float dtp = 1f;
     private RectTransform selfRect;
@@ -26,6 +30,7 @@ public class RulesBoard : MonoBehaviour
     {
         Panel.gameObject.SetActive(false);
         selfRect = GetComponent<RectTransform>();
+        boardImage = GetComponent<Image>();
         contentCanvasGroup = content.GetComponent<CanvasGroup>();
         GameManager.Instance.OnRuleCommitted += (r) => { AddRuleData(r); };
         GameManager.Instance.OnShowRulesRequested += (show) => { HandleToggle(show); };
@@ -73,12 +78,14 @@ public class RulesBoard : MonoBehaviour
                 foreach (var obj in achievementInstances) obj.SetActive(false);
                 foreach (var obj in ruleInstances) obj.SetActive(true);
                 showingAchievements = false;
+                if (rulesBg != null) boardImage = rulesBg;
             }
             else
             {
                 foreach (var obj in ruleInstances) obj.SetActive(false);
                 foreach (var obj in achievementInstances) obj.SetActive(true);
                 showingAchievements = true;
+                if (achievementsBg != null) boardImage = achievementsBg;
             }
         });
         seq.Append(contentCanvasGroup.DOFade(1f, 0.2f).SetEase(Ease.OutCubic));
@@ -126,6 +133,7 @@ public class RulesBoard : MonoBehaviour
                 foreach (var obj in achievementInstances) obj.SetActive(false);
                 foreach (var obj in ruleInstances) obj.SetActive(true);
                 showingAchievements = false;
+                if (rulesBg != null) boardImage = rulesBg;
             }
             isSwitching = false;
             contentCanvasGroup.alpha = 1f;
