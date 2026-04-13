@@ -529,9 +529,6 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     {
         float dt = Time.fixedDeltaTime;
 
-        // =========================
-        // 1️ 输入方向
-        // =========================
         float y = cameraRoot.eulerAngles.y;
         Quaternion yawRotation = Quaternion.Euler(0f, y, 0f);
 
@@ -545,16 +542,10 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
 
-        // =========================
-        // 2️ 移动
-        // =========================
         Vector3 move = inputDir * carMoveForce * dt;
         move.y = 0f;
         transform.position += move;
 
-        // =========================
-        // 3️ 平滑转向（替换原本瞬间旋转）
-        // =========================
         if (inputDir.sqrMagnitude > 0.0001f)
         {
             float angleY = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg;
