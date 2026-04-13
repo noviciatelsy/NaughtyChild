@@ -66,7 +66,7 @@ public class tree : Interact
 
         if (fallCoroutine != null)
             StopCoroutine(fallCoroutine);
-
+        SoundManager.Instance.PlaySFX("¿³Ê÷");
         fallCoroutine = StartCoroutine(FallTreeRoutine());
 
 
