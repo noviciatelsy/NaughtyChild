@@ -21,6 +21,7 @@ public class car : Interact
     [SerializeField] private float stretchAmount = 1.15f;
     [SerializeField] private float squashDuration = 0.3f;
 
+    [SerializeField] private bool autoMove = true;
     [SerializeField] private bool canDrive = false;
     private void Awake()
     {
@@ -38,13 +39,32 @@ public class car : Interact
         moveDir = (pointB - transform.position).normalized;
     }
 
-    public override bool InteractObject(GameObject user)
+
+    public override bool InteractObject(GameObject item)
     {
-        if (!canDrive) return false;
+        if (!canDrive)
+        {
+            if (item != null && item.GetComponent<axe>() != null)
+            {
+                canDrive = true;
 
-        playermovement pm = user.GetComponent<playermovement>();
+                // 停车
+                rb.velocity = Vector3.zero;
+
+                Debug.Log("车已解锁，可以驾驶！");
+                return true;
+            }
+
+            return false;
+        }
+
+        // 已解锁 → 才允许上车
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player == null) return false;
+
+        playermovement pm = player.GetComponent<playermovement>();
         if (pm == null) return false;
-
+        TriggerRuleSystem("drivecar");
         pm.EnterCar(this);
         return true;
     }
@@ -59,6 +79,18 @@ public class car : Interact
 
     private void Move()
     {
+        if (!autoMove)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
+        if (canDrive)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         // 持续给速度
         moveDir = (pointB - transform.position).normalized;
         rb.velocity = moveDir * speed;
@@ -82,6 +114,8 @@ public class car : Interact
 
         transform.position = pointA;
         rb.velocity = Vector3.zero;
+        Debug.Log("?");
+        canDrive = false;
     }
 
     private void ClampHeight()
@@ -164,5 +198,17 @@ public class car : Interact
         // 3️ 回到原始（带弹性）
         seq.Append(t.DOScale(original, squashDuration * 0.4f)
             .SetEase(Ease.OutBounce));
+    }
+
+    public void ResetCarState()
+    {
+        canDrive = false;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.position = pointA;
+
+        moveDir = (pointB - pointA).normalized;
     }
 }

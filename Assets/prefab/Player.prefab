@@ -182,7 +182,6 @@ GameObject:
   - component: {fileID: 3847868900530879554}
   - component: {fileID: 7142754227541913523}
   - component: {fileID: 144879329134164032}
-  - component: {fileID: 5026682159681246118}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -235,6 +234,7 @@ MonoBehaviour:
   carVisual: {fileID: 2286737356177266795}
   playerCollider: {fileID: 3847868900530879554}
   carCollider: {fileID: 6109660782272040227}
+  drivingTrigger: {fileID: 845600376879019287}
   curtargetCar: {fileID: 0}
   carTurnSpeed: 15
   carMoveForce: 10
@@ -323,27 +323,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &5026682159681246118
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165251337322534799}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5, y: 3, z: 2}
-  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &382587686823028503
 GameObject:
   m_ObjectHideFlags: 0
@@ -1581,6 +1560,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1297918776967264781}
+  - component: {fileID: 845600376879019287}
   m_Layer: 0
   m_Name: cartexture
   m_TagString: Untagged
@@ -1613,6 +1593,27 @@ Transform:
   - {fileID: 6353061536500004774}
   m_Father: {fileID: 5882124124856152254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &845600376879019287
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2286737356177266795}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 18, y: 9, z: 7}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2456055373944511960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2193,7 +2194,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1081011350966522676
 Transform:
   m_ObjectHideFlags: 0
@@ -2226,7 +2227,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 17, y: 8, z: 6}
   m_Center: {x: 0, y: 0, z: 0}

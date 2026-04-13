@@ -199,5 +199,11 @@ public class GameManager : MonoBehaviour
                 player.transform.position = new Vector3(0f, 0.5f, -2f);
             }
         }
+
+        car[] cars = GameObject.FindObjectsOfType<car>();
+        foreach (var c in cars)
+        {
+            c.ResetCarState();
+        }
     }
 }

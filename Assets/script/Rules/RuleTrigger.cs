@@ -35,6 +35,7 @@ public class RuleTrigger : MonoBehaviour
 
         if (achievement != null && AchievementManager.Instance != null)
         {
+            Debug.Log(this.transform.position);
             AchievementManager.Instance.RecordAction(achievement.achievementName);
         }
     }

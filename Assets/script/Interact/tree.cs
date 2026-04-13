@@ -106,13 +106,19 @@ public class tree : Interact
     {
         if (ApplePrefab == null) return;
 
-        GameObject log = Instantiate(
-            ApplePrefab,
-            transform.position + Vector3.up * 2.5f,
-            Quaternion.identity
-        );
+        for (int i = 0; i < 2; i++)
+        {
+            Vector3 offset = Random.insideUnitSphere * 0.5f;
+            offset.y = Mathf.Abs(offset.y); // 保证在地面上方
 
-        spawnedItems.Add(log);
+            GameObject apple = Instantiate(
+                ApplePrefab,
+                transform.position + Vector3.up * 2.5f + offset,
+                Quaternion.identity
+            );
+
+            spawnedItems.Add(apple);
+        }
     }
 
     private void DestroyTree()
@@ -177,7 +183,7 @@ public class tree : Interact
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger:" + this.name);
+        //Debug.Log("trigger:" + this.name);
         if (!other.CompareTag("Player")) return;
         if (!isFallen) return;
         if (GameManager.Instance.CurrentState != GameState.Playing) return;

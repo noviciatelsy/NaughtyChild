@@ -441,9 +441,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7318417651107059382}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -472,7 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a08c75014183b4b81389ef6f383c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 1.6
+  mass: 1.5
   resolution: 1500
   timeStep: 0.1
 --- !u!120 &3101230440370188131
@@ -602,6 +602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ruleName: Donttouchbox
   playerTag: Player
+  achievement: {fileID: 0}
 --- !u!65 &4615631193429222004
 BoxCollider:
   m_ObjectHideFlags: 0
