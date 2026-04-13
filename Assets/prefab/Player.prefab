@@ -1764,8 +1764,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF\u963F\u7C73\u8BFA\u65AF"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c21ad3c1e48e3314a97cde31882c304b, type: 2}
-  m_sharedMaterial: {fileID: -6030615323466364634, guid: c21ad3c1e48e3314a97cde31882c304b,
+  m_fontAsset: {fileID: 11400000, guid: 85ff1a4f5173edd47b459c3ba6ea9f7f, type: 2}
+  m_sharedMaterial: {fileID: 449168112501346936, guid: 85ff1a4f5173edd47b459c3ba6ea9f7f,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1796,7 +1796,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0.0001
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535

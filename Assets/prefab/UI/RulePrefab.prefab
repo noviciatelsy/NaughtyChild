@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 780, y: 80}
+  m_SizeDelta: {x: 780, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &855105892381039689
 MonoBehaviour:
@@ -122,10 +122,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u89C4\u52191\uFF1A\u4E0D\u80FD\u8E29\u8349\u576A"
+  m_text: "\u89C4\u52191\uFF1A\u4E0D\u80FD\u8E29\u8349\u95E8"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c21ad3c1e48e3314a97cde31882c304b, type: 2}
-  m_sharedMaterial: {fileID: -6030615323466364634, guid: c21ad3c1e48e3314a97cde31882c304b,
+  m_fontAsset: {fileID: 11400000, guid: 85ff1a4f5173edd47b459c3ba6ea9f7f, type: 2}
+  m_sharedMaterial: {fileID: 449168112501346936, guid: 85ff1a4f5173edd47b459c3ba6ea9f7f,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -150,13 +150,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.3
+  m_fontSize: 55.65
   m_fontSizeBase: 48
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
