@@ -9936,7 +9936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementItem: {fileID: 1830657446}
-  unlockSound: {fileID: 0}
+  unlockSound: {fileID: 8300000, guid: 44d9ad8d376be514a8416f5b50a03515, type: 3}
   showPosY: -618.5
   hidePosY: -821.5
   slideTime: 0.5

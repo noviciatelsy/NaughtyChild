@@ -51,6 +51,25 @@ public class AchievementPopup : MonoBehaviour
         if (!_isShowing)
             StartCoroutine(ProcessQueue());
     }
+
+    /// <summary>
+    /// 播放解锁音效，支持反复调用不打断
+    /// </summary>
+    public void PlayUnlockSound()
+    {
+        if (unlockSound != null && _audioSource != null)
+            _audioSource.PlayOneShot(unlockSound);
+    }
+
+    /// <summary>
+    /// 播放指定音效
+    /// </summary>
+    public void PlaySound(AudioClip clip)
+    {
+        if (clip != null && _audioSource != null)
+            _audioSource.PlayOneShot(clip);
+    }
+
     private IEnumerator ProcessQueue()
     {
         _isShowing = true;
@@ -70,9 +89,7 @@ public class AchievementPopup : MonoBehaviour
         if (achievementItem != null)
             achievementItem.SetData(achievement);
 
-        // 播放音效
-        if (unlockSound != null && _audioSource != null)
-            _audioSource.PlayOneShot(unlockSound);
+        PlayUnlockSound();
 
         gameObject.SetActive(true);
         _rect.anchoredPosition = new Vector2(_rect.anchoredPosition.x, hidePosY);
