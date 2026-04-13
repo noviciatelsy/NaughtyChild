@@ -15995,6 +15995,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2101012969}
   m_PrefabAsset: {fileID: 0}
+--- !u!120 &2119445520 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 5413214013439622665, guid: 6d96720a3713a4e439642d463ee2e9ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 240357775276357376}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2126340970 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4889472711537298079, guid: 7530fc44745cebf458902d57cd792846,
@@ -16449,6 +16455,11 @@ PrefabInstance:
       propertyPath: leashedPoint
       value: 
       objectReference: {fileID: 1630275878}
+    - target: {fileID: 6676652463211363620, guid: 6d96720a3713a4e439642d463ee2e9ae,
+        type: 3}
+      propertyPath: lineRenderer
+      value: 
+      objectReference: {fileID: 2119445520}
     - target: {fileID: 6676652463211363620, guid: 6d96720a3713a4e439642d463ee2e9ae,
         type: 3}
       propertyPath: doorApproachPoint

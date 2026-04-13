@@ -27,6 +27,9 @@ public class Dog : Interact
     [Header("Leash Visual")]
     [SerializeField] private LineRenderer lineRenderer;
 
+    [SerializeField] private SleepZEmitter sleepFx;
+    [SerializeField] private FloatPopEmitter appleFx;
+    [SerializeField] private Sprite appleSprite;
     private NavMeshAgent agent;
 
     // =========================
@@ -57,6 +60,10 @@ public class Dog : Interact
             lineRenderer.positionCount = 2;
             lineRenderer.startColor = Color.black;
             lineRenderer.endColor = Color.black;
+
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+
             lineRenderer.enabled = false;
         }
     }
@@ -89,30 +96,12 @@ public class Dog : Interact
     // ======================================================
     private void SyncStageFromRules()
     {
-        bool r3 = RuleSystem.Instance.IsRuleActive("askdogforhelp3");
-        bool r2 = RuleSystem.Instance.IsRuleActive("askdogforhelp2");
-        bool r1 = RuleSystem.Instance.IsRuleActive("askdogforhelp1");
+        isLeashed = RuleSystem.Instance.IsRuleActive("askdogforhelp1")
+                 || RuleSystem.Instance.IsRuleActive("askdogforhelp2")
+                 || RuleSystem.Instance.IsRuleActive("askdogforhelp3");
 
-        if (r3)
-        {
-            isLeashed = true;
-            isSleep = true;
-        }
-        else if (r2)
-        {
-            isLeashed = true;
-            isSleep = true;
-        }
-        else if (r1)
-        {
-            isLeashed = true;
-            isSleep = false;
-        }
-        else
-        {
-            isLeashed = false;
-            isSleep = false;
-        }
+        isSleep = RuleSystem.Instance.IsRuleActive("askdogforhelp2")
+               || RuleSystem.Instance.IsRuleActive("askdogforhelp3");
 
         actionState = DogActionState.Idle;
     }
@@ -122,43 +111,49 @@ public class Dog : Interact
     // ======================================================
     protected override bool OnInteracted(GameObject item)
     {
+        if (appleFx != null)
+            appleFx.Play(appleSprite);
         if (!Interactable) return false;
 
-        //  正在执行行为时禁止重复点击
         if (actionState == DogActionState.GoingToDoor)
             return false;
 
-        // =========================
-        // 1️ 睡眠状态（最高优先级）
-        // =========================
-        if (isSleep)
-        {
-            if (item != null && item.GetComponent<apple>() != null)
-            {
-                isSleep = false;
-                Debug.Log("解除 sleep");
-                return true;
-            }
+        bool handled = false;
 
-            return false;
+        // =========================
+        // 🪓 处理 leash
+        // =========================
+        if (isLeashed && item != null && item.GetComponent<axe>() != null)
+        {
+            isLeashed = false;
+            Debug.Log("解除 leash");
+            handled = true;
         }
 
         // =========================
-        // 2️ leash 状态
+        // 🍎 处理 sleep
         // =========================
-        if (isLeashed)
+        if (isSleep && item != null && item.GetComponent<apple>() != null)
         {
-            if (item != null && item.GetComponent<axe>() != null)
-            {
-                isLeashed = false;
-                Debug.Log("解除 leash");
-                return true;
-            }
-            return false;
+            isSleep = false;
+            if (appleFx != null)
+                appleFx.Play(appleSprite);
+            Debug.Log("解除 sleep");
+            handled = true;
         }
 
+        // 👉 如果用了道具，直接返回
+        if (handled)
+            return true;
+
         // =========================
-        // 3️正常点击 → 开门 + 推规则
+        // 🚫 状态阻断
+        // =========================
+        if (isSleep || isLeashed)
+            return false;
+
+        // =========================
+        // ✅ 正常行为
         // =========================
         StartGoToDoor();
         TriggerRules();
@@ -192,41 +187,44 @@ public class Dog : Interact
             return;
 
         // =========================
-        // 去开门逻辑
+        // 🚪 去开门逻辑
         // =========================
         if (actionState == DogActionState.GoingToDoor)
         {
             if (!agent.pathPending && agent.remainingDistance <= doorReachDistance)
             {
                 if (door != null)
-                {
                     door.Open();
-                    Debug.Log("狗狗开门");
-                }
 
                 actionState = DogActionState.Idle;
             }
-
-            return; // ❗阻断其他行为
-        }
-
-        // =========================
-        // 😴 睡眠
-        // =========================
-        if (isSleep)
-        {
-            agent.ResetPath();
             return;
         }
 
         // =========================
-        // 🚶 wander
+        // 😴 sleep 只限制“移动”，不 return
         // =========================
-        if (isLeashed)
-            HandleLeashedWander();
-        else
-            HandleWander();
+        if (isSleep)
+        {
+            agent.ResetPath();
+            agent.velocity = Vector3.zero;
 
+            sleepFx.StartSleepEffect();
+        }
+        else
+        {
+            // =========================
+            // 🚶 movement logic
+            // =========================
+            if (isLeashed)
+                HandleLeashedWander();
+            else
+                HandleWander();
+
+            sleepFx.StopSleepEffect();
+        }
+
+        // ✅ leash 视觉永远更新（不受 sleep 影响）
         UpdateLeashLine();
     }
 
@@ -340,18 +338,18 @@ public class Dog : Interact
 
     private void UpdateLeashLine()
     {
-        if (lineRenderer == null) return;
+        if (lineRenderer == null || leashedPoint == null)
+            return;
 
-        if (isLeashed && leashedPoint != null)
-        {
-            lineRenderer.enabled = true;
-
-            lineRenderer.SetPosition(0, leashedPoint.position);
-            lineRenderer.SetPosition(1, transform.position);
-        }
-        else
+        if (!isLeashed)
         {
             lineRenderer.enabled = false;
+            return;
         }
+
+        lineRenderer.enabled = true;
+
+        lineRenderer.SetPosition(0, leashedPoint.position);
+        lineRenderer.SetPosition(1, transform.position);
     }
 }
