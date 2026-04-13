@@ -18,6 +18,7 @@ public class HeadBounce : MonoBehaviour
         if (rb == null) return;
         playermovement pm = other.GetComponent<playermovement>();
         if (pm == null) return;
+        if (pm.IsDriving) return;
         // 关键：必须是“跳跃状态”
         //!pm.IsGround
         if (other.transform.position.y<0.65f)

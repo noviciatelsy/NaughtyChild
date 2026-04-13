@@ -38,11 +38,16 @@ public class car : Interact
         moveDir = (pointB - transform.position).normalized;
     }
 
-    public override bool InteractObject(GameObject user)
+
+    public override bool InteractObject(GameObject item)
     {
         if (!canDrive) return false;
 
-        playermovement pm = user.GetComponent<playermovement>();
+        // 不再相信传进来的参数
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player == null) return false;
+
+        playermovement pm = player.GetComponent<playermovement>();
         if (pm == null) return false;
 
         pm.EnterCar(this);

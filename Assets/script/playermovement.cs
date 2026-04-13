@@ -43,6 +43,9 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
     [SerializeField] private GameObject carVisual;
     [SerializeField] private Collider playerCollider;
     [SerializeField] private Collider carCollider;
+    [SerializeField] private Collider drivingTrigger; //
+    [SerializeField] private float playerMass = 10f;
+    [SerializeField] private float carMass = 100f;
 
     public enum PlayerState
     {
@@ -50,6 +53,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         Driving
     }
     private PlayerState currentState = PlayerState.Normal;
+    public bool IsDriving => currentState == PlayerState.Driving;
 
     private void Awake()
     {
@@ -488,7 +492,15 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
         playerCollider.enabled = !driving;
         carCollider.enabled = driving;
+
+        if (drivingTrigger != null)
+            drivingTrigger.enabled = driving;
+        if (rb != null)
+        {
+            rb.mass = driving ? carMass : playerMass;
+        }
     }
+
 
     //玩家"车"状态
     public car curtargetCar;
@@ -507,7 +519,6 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         Vector3 pos = targetCar.transform.position;
         transform.position = pos + new Vector3(0, -0.8f, 0);
         currentCarRot = carVisual.transform.rotation;
-        SetLayerRecursively(gameObject, LayerMask.NameToLayer("PlayerCar"));
 
         targetCar.gameObject.SetActive(false); //不要销毁
     }
@@ -518,11 +529,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
         SetDrivingVisual(false);
 
-        curtargetCar.transform.position = transform.position + new Vector3(0,1.2f,0);   
-        transform.position += new Vector3(1.5f,0,1.5f);
+        curtargetCar.transform.position = transform.position + new Vector3(0,1.2f,0);
+
+        transform.position += new Vector3(1.5f, 0.8f, 1.5f);
         curtargetCar.gameObject.SetActive(true);
         curtargetCar = null;
-        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
     }
 
     private void UpdateCarPhysics()
@@ -560,6 +571,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
 
             carVisual.transform.rotation = currentCarRot;
             carCollider.transform.rotation = currentCarRot;
+
         }
     }
 
@@ -589,15 +601,6 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         }
     }
 
-    private void SetLayerRecursively(GameObject obj, int layer)
-    {
-        obj.layer = layer;
-
-        foreach (Transform child in obj.transform)
-        {
-            SetLayerRecursively(child.gameObject, layer);
-        }
-    }
 
     public void ResetPlayerState()
     {
@@ -629,7 +632,5 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,Player
         //  强制停止车逻辑（防Update残留）
         StopAllCoroutines();
 
-        //  Layer恢复
-        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
     }
 }
