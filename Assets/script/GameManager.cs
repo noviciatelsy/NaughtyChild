@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public event Action<Rule> OnRuleCommitted;         //本轮生效的规则
     public event Action OnGameRestarted;
     public event Action<bool> OnShowRulesRequested;
+    public event Action OnSwitchBoardRequested;
 
     public int RoundToEnd = 10; //通关多少次可以游戏结束
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
@@ -112,16 +113,12 @@ public class GameManager : MonoBehaviour
     }
     public void RequestShowRules(bool show)
     {
-        if (show && CurrentState == GameState.Playing)
-        {
-            Pause();
-            OnShowRulesRequested?.Invoke(true);
-        }
-        else if (!show && CurrentState == GameState.Paused)
-        {
-            Resume();
-            OnShowRulesRequested?.Invoke(false);
-        }
+        OnShowRulesRequested?.Invoke(show);
+    }
+
+    public void RequestSwitchBoard()
+    {
+        OnSwitchBoardRequested?.Invoke();
     }
 
     public void GameOver()

@@ -6,8 +6,15 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static DialogueManager Instance { get; private set; }
+
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private float charDuration = 0.05f;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void SetText(string dialogue)
     {

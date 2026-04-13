@@ -31,7 +31,7 @@ public class Box : Interact
         else return false;//其他情况不会与箱子交互
 
         // 默认逻辑
-        Debug.Log("普通交互箱子");
+        // Debug.Log("普通交互箱子");
     }
 
     private void BreakBox()

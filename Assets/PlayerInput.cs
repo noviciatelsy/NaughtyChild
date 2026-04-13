@@ -250,6 +250,54 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UIMode"",
+            ""id"": ""102e82b5-fe23-4714-a305-3b02510072ff"",
+            ""actions"": [
+                {
+                    ""name"": ""SwitchBoard"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3238013-08c8-445b-890d-f864e934f300"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloseBoard"",
+                    ""type"": ""Button"",
+                    ""id"": ""4e7b4d95-4078-4e46-be41-da0a8e00a3b0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""13722c0c-c168-4f82-820c-7f49c5eb56f0"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchBoard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7cce29b-a646-4a48-a387-e99aeb2e1c03"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CloseBoard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -261,11 +309,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_GameMode_isRushing = m_GameMode.FindAction("isRushing", throwIfNotFound: true);
         m_GameMode_Jump = m_GameMode.FindAction("Jump", throwIfNotFound: true);
         m_GameMode_ShowRules = m_GameMode.FindAction("ShowRules", throwIfNotFound: true);
+        // UIMode
+        m_UIMode = asset.FindActionMap("UIMode", throwIfNotFound: true);
+        m_UIMode_SwitchBoard = m_UIMode.FindAction("SwitchBoard", throwIfNotFound: true);
+        m_UIMode_CloseBoard = m_UIMode.FindAction("CloseBoard", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         UnityEngine.Debug.Assert(!m_GameMode.enabled, "This will cause a leak and performance issues, PlayerInput.GameMode.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UIMode.enabled, "This will cause a leak and performance issues, PlayerInput.UIMode.Disable() has not been called.");
     }
 
     /// <summary>
@@ -477,6 +530,113 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameModeActions" /> instance referencing this action map.
     /// </summary>
     public GameModeActions @GameMode => new GameModeActions(this);
+
+    // UIMode
+    private readonly InputActionMap m_UIMode;
+    private List<IUIModeActions> m_UIModeActionsCallbackInterfaces = new List<IUIModeActions>();
+    private readonly InputAction m_UIMode_SwitchBoard;
+    private readonly InputAction m_UIMode_CloseBoard;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "UIMode".
+    /// </summary>
+    public struct UIModeActions
+    {
+        private @PlayerInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public UIModeActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "UIMode/SwitchBoard".
+        /// </summary>
+        public InputAction @SwitchBoard => m_Wrapper.m_UIMode_SwitchBoard;
+        /// <summary>
+        /// Provides access to the underlying input action "UIMode/CloseBoard".
+        /// </summary>
+        public InputAction @CloseBoard => m_Wrapper.m_UIMode_CloseBoard;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_UIMode; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="UIModeActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(UIModeActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="UIModeActions" />
+        public void AddCallbacks(IUIModeActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIModeActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIModeActionsCallbackInterfaces.Add(instance);
+            @SwitchBoard.started += instance.OnSwitchBoard;
+            @SwitchBoard.performed += instance.OnSwitchBoard;
+            @SwitchBoard.canceled += instance.OnSwitchBoard;
+            @CloseBoard.started += instance.OnCloseBoard;
+            @CloseBoard.performed += instance.OnCloseBoard;
+            @CloseBoard.canceled += instance.OnCloseBoard;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="UIModeActions" />
+        private void UnregisterCallbacks(IUIModeActions instance)
+        {
+            @SwitchBoard.started -= instance.OnSwitchBoard;
+            @SwitchBoard.performed -= instance.OnSwitchBoard;
+            @SwitchBoard.canceled -= instance.OnSwitchBoard;
+            @CloseBoard.started -= instance.OnCloseBoard;
+            @CloseBoard.performed -= instance.OnCloseBoard;
+            @CloseBoard.canceled -= instance.OnCloseBoard;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIModeActions.UnregisterCallbacks(IUIModeActions)" />.
+        /// </summary>
+        /// <seealso cref="UIModeActions.UnregisterCallbacks(IUIModeActions)" />
+        public void RemoveCallbacks(IUIModeActions instance)
+        {
+            if (m_Wrapper.m_UIModeActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="UIModeActions.AddCallbacks(IUIModeActions)" />
+        /// <seealso cref="UIModeActions.RemoveCallbacks(IUIModeActions)" />
+        /// <seealso cref="UIModeActions.UnregisterCallbacks(IUIModeActions)" />
+        public void SetCallbacks(IUIModeActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIModeActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIModeActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="UIModeActions" /> instance referencing this action map.
+    /// </summary>
+    public UIModeActions @UIMode => new UIModeActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GameMode" which allows adding and removing callbacks.
     /// </summary>
@@ -519,5 +679,27 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShowRules(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UIMode" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="UIModeActions.AddCallbacks(IUIModeActions)" />
+    /// <seealso cref="UIModeActions.RemoveCallbacks(IUIModeActions)" />
+    public interface IUIModeActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "SwitchBoard" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchBoard(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CloseBoard" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCloseBoard(InputAction.CallbackContext context);
     }
 }

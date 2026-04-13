@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
-public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
+public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions,PlayerInput.IUIModeActions
 {
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5f;
@@ -37,6 +37,7 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private Camera mainCamera;
     private bool isRushing;
     private float yRotation;
+    private bool isLocked;
 
     private void Awake()
     {
@@ -53,8 +54,14 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         rb.isKinematic = false;
     }
 
+    private bool isBoardOpen;
+
     private void OnEnable() => inputActions.GameMode.Enable();
-    private void OnDisable() => inputActions.GameMode.Disable();
+    private void OnDisable()
+    {
+        inputActions.GameMode.Disable();
+        inputActions.UIMode.Disable();
+    }
     private void OnDestroy() => inputActions.Dispose();
 
     private void Update()
@@ -78,6 +85,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     // =========================
     private void Move()
     {
+        if (isLocked)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         if (externalForceTimer > 0f)
         {
             externalForceTimer -= Time.fixedDeltaTime;
@@ -282,8 +295,15 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
         return false;
     }
 
+    public void SetLocked(bool locked)
+    {
+        isLocked = locked;
+    }
+
     private void HandleMouseDrag()
     {
+        if (isLocked || isBoardOpen) return;
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             isDragging = true;
@@ -308,12 +328,41 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     {
         if (ctx.started)
         {
-            GameManager.Instance.RequestShowRules(true);
+            OpenBoard();
         }
-        else if (ctx.canceled)
-        {
-            GameManager.Instance.RequestShowRules(false);
-        }
+        // 关闭由 UIMode 的 OnCloseBoard 处理
+    }
+
+    private void OpenBoard()
+    {
+        if (isBoardOpen) return;
+        isBoardOpen = true;
+
+        // 先移除 GameMode 回调，防止 Disable 时触发 canceled
+        inputActions.GameMode.RemoveCallbacks(this);
+        inputActions.GameMode.Disable();
+
+        // 清除残留输入
+        moveInput = Vector2.zero;
+
+        inputActions.UIMode.AddCallbacks(this);
+        inputActions.UIMode.Enable();
+
+        GameManager.Instance.RequestShowRules(true);
+    }
+
+    private void CloseBoard()
+    {
+        if (!isBoardOpen) return;
+        isBoardOpen = false;
+
+        inputActions.UIMode.RemoveCallbacks(this);
+        inputActions.UIMode.Disable();
+
+        inputActions.GameMode.AddCallbacks(this);
+        inputActions.GameMode.Enable();
+
+        GameManager.Instance.RequestShowRules(false);
     }
 
     private void ApplyFallAcceleration()
@@ -333,5 +382,21 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     {
         rb.velocity = velocity; // 直接设置冲量（最稳定）
         externalForceTimer = externalForceDuration;
+    }
+
+    public void OnSwitchBoard(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameManager.Instance.RequestSwitchBoard();
+        }
+    }
+
+    public void OnCloseBoard(InputAction.CallbackContext context)
+    {
+        if (context.canceled)
+        {
+            CloseBoard();
+        }
     }
 }

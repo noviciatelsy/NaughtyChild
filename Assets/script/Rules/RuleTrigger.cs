@@ -12,6 +12,9 @@ public class RuleTrigger : MonoBehaviour
     [SerializeField] public string ruleName;
     [SerializeField] private string playerTag = "Player";
 
+    [Header("成就配置")]
+    [SerializeField] private AchievementSO achievement;
+
     public string RuleName => ruleName;
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -28,6 +31,11 @@ public class RuleTrigger : MonoBehaviour
         else
         {
             RuleSystem.Instance.SetPending(ruleName);
+        }
+
+        if (achievement != null && AchievementManager.Instance != null)
+        {
+            AchievementManager.Instance.RecordAction(achievement.achievementName);
         }
     }
 }

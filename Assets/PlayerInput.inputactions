@@ -164,6 +164,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UIMode",
+            "id": "102e82b5-fe23-4714-a305-3b02510072ff",
+            "actions": [
+                {
+                    "name": "SwitchBoard",
+                    "type": "Button",
+                    "id": "b3238013-08c8-445b-890d-f864e934f300",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseBoard",
+                    "type": "Button",
+                    "id": "4e7b4d95-4078-4e46-be41-da0a8e00a3b0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "13722c0c-c168-4f82-820c-7f49c5eb56f0",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchBoard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7cce29b-a646-4a48-a387-e99aeb2e1c03",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CloseBoard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
