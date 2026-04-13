@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1af515502e0c5954baab71bbfe38b8a5, type: 3}
-  m_Name: AskHelpFromDog
+  m_Name: touchcar
   m_EditorClassIdentifier: 
-  priority: 41
-  description: "\u4E0D\u8981\u8BA9\u72D7\u72D7\u5E2E\u5FD9!"
+  priority: 1
+  description: "\u4E0D\u8981\u78B0\u74F7!"

@@ -14,6 +14,8 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     [SerializeField] private float mouseSensitivity = 1f;
     [SerializeField] private float sprintMultiplier = 2f;
     private Vector3 moveVelocity;
+    private float externalForceTimer = 0f;
+    private float externalForceDuration = 0.3f;
 
     [Header("跳跃参数")]
     private bool isjump = false;
@@ -28,8 +30,6 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     private bool isGrounded;
     [SerializeField] private float holdThreshold = 0.5f; // 超过这个时间算长按
     private float mouseDownTime;
-    private bool isHolding = false;
-    private bool isLongPress = false;
 
     private PlayerInput inputActions;
     private Vector2 moveInput;
@@ -78,6 +78,12 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
     // =========================
     private void Move()
     {
+        if (externalForceTimer > 0f)
+        {
+            externalForceTimer -= Time.fixedDeltaTime;
+            return;
+        }
+
         float currentSpeed = moveSpeed;
 
         if (isRushing && isGrounded)
@@ -321,5 +327,11 @@ public class playermovement : MonoBehaviour, PlayerInput.IGameModeActions
 
             rb.velocity = v;
         }
+    }
+
+    public void ApplyExternalForce(Vector3 velocity)
+    {
+        rb.velocity = velocity; // 直接设置冲量（最稳定）
+        externalForceTimer = externalForceDuration;
     }
 }

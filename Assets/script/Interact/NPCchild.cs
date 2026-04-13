@@ -204,7 +204,7 @@ public class NPCchild : Interact
             return;
         }
 
-        // ❗ 正在移动
+        // 正在移动
         wanderTimer += Time.deltaTime;
 
         if (wanderTimer >= wanderInterval)
@@ -216,7 +216,7 @@ public class NPCchild : Interact
             wanderTimer = 0f;
         }
 
-        // ❗ 到达点 → 进入等待
+        // 到达点 → 进入等待
         if (!agent.pathPending && agent.remainingDistance <= 0.2f)
         {
             isWaitingAtPoint = true;
