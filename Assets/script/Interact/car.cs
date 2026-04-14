@@ -65,8 +65,6 @@ public class car : Interact
 
             return false;
         }
-
-        // 已解锁 → 才允许上车
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null) return false;
 
@@ -212,6 +210,7 @@ public class car : Interact
         // 3️ 回到原始（带弹性）
         seq.Append(t.DOScale(original, squashDuration * 0.4f)
             .SetEase(Ease.OutBounce));
+        seq.OnKill(() => t.DOKill(false)); 
     }
 
     public void ResetCarState()

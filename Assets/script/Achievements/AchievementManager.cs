@@ -27,6 +27,7 @@ public class AchievementManager : MonoBehaviour
             ach.ResetProgress();
             ach.OnUnlocked += HandleUnlocked;
         }
+
     }
 
     private void OnDestroy()

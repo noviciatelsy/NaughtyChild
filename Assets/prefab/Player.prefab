@@ -235,6 +235,10 @@ MonoBehaviour:
   playerCollider: {fileID: 3847868900530879554}
   carCollider: {fileID: 6109660782272040227}
   drivingTrigger: {fileID: 845600376879019287}
+  playerMass: 10
+  carMass: 100
+  fallDeathY: -20
+  achievement: {fileID: 11400000, guid: 2b3ff5be7ea331e41a1f00dceb37c314, type: 2}
   curtargetCar: {fileID: 0}
   carTurnSpeed: 15
   carMoveForce: 10
@@ -2161,7 +2165,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: "\u5FEB\u770B\u8FD9\u4E2A\u997C\u5E72\uFF01\u6211\u597D\u60F3\u8981\uFF01"
+            m_StringArgument: "\u770B\u8FD9\u4E2A\u624B\u673A\uFF01\u6211\u597D\u60F3\u73A9\uFF01"
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!114 &948578565367762171
@@ -3130,7 +3134,7 @@ Transform:
   m_GameObject: {fileID: 5423163951670590682}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

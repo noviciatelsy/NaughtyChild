@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 public enum GameState
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     public int RulesToEnd = 1; //累计触发多少条规则可以游戏结束
     public string EndingSceneName = "Ending";
+    public string GameSceneName = "GameScene";
+
+    public PlayableDirector _director;
     public GameState CurrentState { get; private set; } = GameState.WaitingToStart;
     public int CurrentRound { get; private set; }
     public int CookieCount { get; private set; }
@@ -47,6 +51,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         RuleSystem.Instance.Initialize();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == GameSceneName && _director != null)
+        {
+            _director.time = 0;
+            _director.Play();
+        }
     }
     public void StartRound()
     {
@@ -125,11 +139,21 @@ public class GameManager : MonoBehaviour
     //完全重开游戏，清空规则和轮次
     public void RestartGame()
     {
+        ResetGameState();
+        StartRound();
+    }
+
+    /// <summary>
+    /// 只重置状态，不启动新一轮（用于跨场景重开，让目标场景自行启动）
+    /// </summary>
+    public void ResetGameState()
+    {
         RuleSystem.Instance.ClearAllRules();
+        RuleSystem.Instance.Initialize();
         CurrentRound = 0;
         CookieCount = 0;
+        SetState(GameState.WaitingToStart);
         OnGameRestarted?.Invoke();
-        StartRound();
     }
     public void Pause()
     {
@@ -156,6 +180,19 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         SetState(GameState.GameOver);
+    }
+
+    [ContextMenu("测试通关")]
+    private void TestCompleteGame()
+    {
+        if (CurrentState != GameState.Playing)
+            SetState(GameState.Playing);
+        CompleteRound();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     [ContextMenu("测试结算结束")]

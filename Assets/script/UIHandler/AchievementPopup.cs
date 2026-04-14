@@ -67,7 +67,7 @@ public class AchievementPopup : MonoBehaviour
     public void PlaySound(AudioClip clip)
     {
         if (clip != null && _audioSource != null)
-            _audioSource.PlayOneShot(clip);
+            _audioSource.PlayOneShot(clip,3f);
     }
 
     private IEnumerator ProcessQueue()
