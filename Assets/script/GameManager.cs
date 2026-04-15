@@ -52,6 +52,10 @@ public class GameManager : MonoBehaviour
     {
         RuleSystem.Instance.Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
+        if (_director != null)
+        {
+            _director.stopped += OnDirectorStopped;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -242,5 +246,11 @@ public class GameManager : MonoBehaviour
         {
             c.ResetCarState();
         }
+    }
+
+    private void OnDirectorStopped(PlayableDirector director)
+    {
+        Debug.Log("Timeline播放结束");
+        RestartRound();
     }
 }
