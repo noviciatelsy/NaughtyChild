@@ -156,8 +156,28 @@ public class GameManager : MonoBehaviour
         RuleSystem.Instance.Initialize();
         CurrentRound = 0;
         CookieCount = 0;
+        Time.timeScale = 1f;
         SetState(GameState.WaitingToStart);
+
+        // 清除所有事件订阅，防止旧场景对象残留导致空引用
+        ClearAllEvents();
         OnGameRestarted?.Invoke();
+    }
+
+    /// <summary>
+    /// 清除所有事件订阅（场景切换时旧订阅者已被销毁）
+    /// </summary>
+    private void ClearAllEvents()
+    {
+        OnGameStateChanged = null;
+        OnRoundStarted = null;
+        OnRoundCompleted = null;
+        OnRuleCommitted = null;
+        OnGameRestarted = null;
+        OnShowRulesRequested = null;
+        OnSwitchBoardRequested = null;
+        OnRuleViolated = null;
+        OnCookieCollected = null;
     }
     public void Pause()
     {

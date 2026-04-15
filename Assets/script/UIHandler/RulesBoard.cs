@@ -42,8 +42,8 @@ public class RulesBoard : MonoBehaviour
         selfRect = GetComponent<RectTransform>();
         boardImage = GetComponent<Image>();
         contentCanvasGroup = content.GetComponent<CanvasGroup>();
-        GameManager.Instance.OnRuleCommitted += (r) => { AddRuleData(r); };
-        GameManager.Instance.OnShowRulesRequested += (show) => { HandleToggle(show); };
+        GameManager.Instance.OnRuleCommitted += OnRuleCommitted;
+        GameManager.Instance.OnShowRulesRequested += HandleToggle;
         GameManager.Instance.OnSwitchBoardRequested += SwitchContent;
         GameManager.Instance.OnRuleViolated += OnRuleViolated;
         GameManager.Instance.OnCookieCollected += OnCookieCollected;
@@ -59,12 +59,19 @@ public class RulesBoard : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
+            GameManager.Instance.OnRuleCommitted -= OnRuleCommitted;
+            GameManager.Instance.OnShowRulesRequested -= HandleToggle;
             GameManager.Instance.OnSwitchBoardRequested -= SwitchContent;
             GameManager.Instance.OnRuleViolated -= OnRuleViolated;
             GameManager.Instance.OnCookieCollected -= OnCookieCollected;
         }
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.OnAchievementUnlocked -= OnAchievementUnlocked;
+    }
+
+    private void OnRuleCommitted(Rule r)
+    {
+        AddRuleData(r);
     }
 
     private void OnAchievementUnlocked(AchievementSO ach)

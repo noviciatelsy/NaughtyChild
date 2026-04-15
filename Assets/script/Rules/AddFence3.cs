@@ -18,6 +18,12 @@ public class AddFence3 : RuleTrigger
         }
     }
 
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnRoundStarted -= OnRoundChanged;
+    }
+
     private void OnRoundChanged(int newRound)
     {
         if (newRound > curRound)
