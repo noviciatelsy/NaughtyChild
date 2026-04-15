@@ -52,19 +52,47 @@ public class GameManager : MonoBehaviour
     {
         RuleSystem.Instance.Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
-        if (_director != null)
+
+        // 首次启动：PlayOnAwake 已经开始播放 Timeline，等它结束后启动轮次
+        if (_director != null && _director.state == PlayState.Playing)
         {
-            _director.stopped += OnDirectorStopped;
+            _waitForDirectorCoroutine = StartCoroutine(WaitForDirectorThenStart());
         }
     }
 
+    private Coroutine _waitForDirectorCoroutine;
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == GameSceneName && _director != null)
+        if (scene.name != GameSceneName) return;
+
+        if (_waitForDirectorCoroutine != null)
+            StopCoroutine(_waitForDirectorCoroutine);
+
+        if (_director != null)
         {
             _director.time = 0;
             _director.Play();
+            _waitForDirectorCoroutine = StartCoroutine(WaitForDirectorThenStart());
         }
+        else
+        {
+            StartRound();
+        }
+    }
+
+    private IEnumerator WaitForDirectorThenStart()
+    {
+        // 等一帧确保所有 Start() 已执行
+        yield return null;
+
+        // 等待 Timeline 播放完毕
+        while (_director != null && _director.state == PlayState.Playing)
+            yield return null;
+
+        _waitForDirectorCoroutine = null;
+        Debug.Log("Timeline播放结束，开始新一轮");
+        RestartRound();
     }
     public void StartRound()
     {
@@ -266,11 +294,5 @@ public class GameManager : MonoBehaviour
         {
             c.ResetCarState();
         }
-    }
-
-    private void OnDirectorStopped(PlayableDirector director)
-    {
-        Debug.Log("Timeline播放结束");
-        RestartRound();
     }
 }
