@@ -490,6 +490,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3296029952965882584}
+  - {fileID: 7060019103935503551}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2461977595247384148
@@ -642,3 +643,77 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &8778990497154808115
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5995830129241802303}
+    m_Modifications:
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922107757288497354, guid: c20b84fbc73f6f74d9bbf326ad170504,
+        type: 3}
+      propertyPath: m_Name
+      value: CookieSparkleFX
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c20b84fbc73f6f74d9bbf326ad170504, type: 3}
+--- !u!4 &7060019103935503551 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1742616667013064076, guid: c20b84fbc73f6f74d9bbf326ad170504,
+    type: 3}
+  m_PrefabInstance: {fileID: 8778990497154808115}
+  m_PrefabAsset: {fileID: 0}

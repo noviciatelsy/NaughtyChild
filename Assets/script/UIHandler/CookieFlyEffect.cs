@@ -34,6 +34,7 @@ public class CookieFlyEffect : MonoBehaviour
     private Quaternion originalLocalRot;
     private int[] originalRenderQueues;
     private Material[] flyMaterials;
+    private ParticleSystem[] sparkleFx;
 
     void Start()
     {
@@ -43,6 +44,10 @@ public class CookieFlyEffect : MonoBehaviour
         originalScale = transform.localScale;
         originalLocalPos = transform.localPosition;
         originalLocalRot = transform.localRotation;
+
+        // 缓存粒子特效，并确保静止时不发射
+        sparkleFx = GetComponentsInChildren<ParticleSystem>(true);
+        SetSparkleActive(false);
 
         // 缓存所有材质的原始renderQueue
         var renderers = GetComponentsInChildren<Renderer>();
@@ -87,6 +92,9 @@ public class CookieFlyEffect : MonoBehaviour
         // 渲染置顶
         SetRenderOnTop(true);
 
+        // 开始旋转飞行 → 开启烟花
+        SetSparkleActive(true);
+
         // 中间展示位置（相机本地坐标）
         Vector3 midLocalPos;
         if (midPoint != null)
@@ -126,13 +134,34 @@ public class CookieFlyEffect : MonoBehaviour
         {
             var rend = GetComponentInChildren<Renderer>();
             if (rend != null) rend.enabled = false;
+            SetSparkleActive(false);
             onComplete?.Invoke();
         });
+    }
+
+    private void SetSparkleActive(bool on)
+    {
+        if (sparkleFx == null) return;
+        for (int i = 0; i < sparkleFx.Length; i++)
+        {
+            var p = sparkleFx[i];
+            if (p == null) continue;
+            if (on)
+            {
+                p.Clear(true);
+                p.Play(true);
+            }
+            else
+            {
+                p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+        }
     }
 
     public void ResetFlyState()
     {
         transform.DOKill();
+        SetSparkleActive(false);
 
         // 从相机下移回原父物体
         if (originalParent != null)
